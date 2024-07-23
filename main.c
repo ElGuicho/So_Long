@@ -6,7 +6,7 @@
 /*   By: gmunoz <gmunoz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/19 15:48:40 by gmunoz            #+#    #+#             */
-/*   Updated: 2024/06/20 18:42:43 by gmunoz           ###   ########.fr       */
+/*   Updated: 2024/07/23 19:09:56 by gmunoz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ int main(int argc, char const *argv[])
 	    return 1;
 	}
 	
-	vars.win = mlx_new_window(vars.mlx, 3200, 1800, "Tudi Gaimu");
+	vars.win = mlx_new_window(vars.mlx, 1920, 1080, "Tudi Gaimu");
 	if (!vars.win)
 	{
 	    printf("mlx_new_window failed\n");
@@ -95,7 +95,7 @@ int main(int argc, char const *argv[])
 		printf("mlx_get_data_addr failed\n");
 	    return 1;
 	}
-	mlx_put_image_to_window(vars.mlx, vars.win, img.img, 1600, 950);
+	mlx_put_image_to_window(vars.mlx, vars.win, img.img, 64, 36);
 	mlx_loop(vars.mlx);
 	return 0;
 }
