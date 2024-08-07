@@ -6,10 +6,11 @@
 /*   By: gmunoz <gmunoz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/19 15:48:40 by gmunoz            #+#    #+#             */
-/*   Updated: 2024/08/07 14:08:20 by gmunoz           ###   ########.fr       */
+/*   Updated: 2024/08/07 18:38:59 by gmunoz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "colors.h"
 #include <mlx.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -21,6 +22,8 @@ typedef struct	s_data {
 	int		bits_per_pixel;
 	int		line_length;
 	int		endian;
+	int		x;
+	int		y;
 }				t_data;
 
 typedef struct	s_vars {
@@ -46,28 +49,64 @@ int close_window(t_vars *vars)
     exit(0);
 }
 
-
-int	key_hook(int keycode, t_vars *vars)
+int	key_hook(int keycode, t_vars *vars, t_data *img)
 {
-	if (keycode == 119 || keycode == 97 || keycode == 115 || keycode == 100)
+/* 	printf("x = %d\n", img->x);
+	printf("y = %d\n", img->y); */
+	if (keycode == 119)
 	{
-		printf("number of steps = %d\n", vars->steps);
-		vars->steps++;
+		if (img->y > 33)
+		{
+			mlx_put_image_to_window(vars->mlx, vars->win, vars->img->img2, img->x, img->y);
+			img->y -= 128;
+			mlx_put_image_to_window(vars->mlx, vars->win, vars->img->img, img->x, img->y);
+			printf("number of steps = %d\n", vars->steps);
+			vars->steps++;
+		}
+		printf("y = %d\n", img->y);
 	}
-	return (0);
-}
-int	animation_hook(int keycode, t_vars *vars)
-{
-	if (keycode == 119 || keycode == 97 || keycode == 115 || keycode == 100)
+	if (keycode == 97)
 	{
-		mlx_put_image_to_window(vars->mlx, vars->win, vars->img->img2, 1000, 36);
+		if (img->x > 0)
+		{
+			mlx_put_image_to_window(vars->mlx, vars->win, vars->img->img2, img->x, img->y);
+			img->x -= 128;	
+			mlx_put_image_to_window(vars->mlx, vars->win, vars->img->img, img->x, img->y);
+			printf("number of steps = %d\n", vars->steps);
+			vars->steps++;
+		}
+		printf("x = %d\n", img->x);
+	}
+	if (keycode == 115)
+	{
+		if (img->y < 929)
+		{
+			mlx_put_image_to_window(vars->mlx, vars->win, vars->img->img2, img->x, img->y);
+			img->y += 128;	
+			mlx_put_image_to_window(vars->mlx, vars->win, vars->img->img, img->x, img->y);
+			printf("number of steps = %d\n", vars->steps);
+			vars->steps++;
+		}
+		printf("y = %d\n", img->y);
+	}
+	if (keycode == 100)
+	{
+		if (img->x < 1792)
+		{
+			mlx_put_image_to_window(vars->mlx, vars->win, vars->img->img2, img->x, img->y);
+			img->x += 128;	
+			mlx_put_image_to_window(vars->mlx, vars->win, vars->img->img, img->x, img->y);
+			printf("number of steps = %d\n", vars->steps);
+			vars->steps++;
+		}
+		printf("x = %d\n", img->x);
 	}
 	return (0);
 }
 
 int	render_next_frame(t_vars *vars)
 {
-	mlx_put_image_to_window(vars->mlx, vars->win, vars->img->img, 64, 36);
+	mlx_put_image_to_window(vars->mlx, vars->win, vars->img->img, 0, 161);
 	return (0);
 }
 
@@ -76,10 +115,12 @@ int main(int argc, char const *argv[])
 	t_data	img;
 	t_vars	vars;
 	char	*relative_path = "./char_trial.xpm";
-	char	*relative_path2 = "./AnimationSheet_Character.xpm";
+	char	*relative_path2 = "./floor-tileset.xpm";
 	int		img_width;
 	int		img_height;
 
+	img.x = 128;
+	img.y = 128;
 	vars.steps = 1;
 	(void)argc;
 	(void)argv;
@@ -98,6 +139,7 @@ int main(int argc, char const *argv[])
 	}
 	mlx_hook(vars.win, 2, 1L<<0, close, &vars);
 	mlx_hook(vars.win, 17, 1L<<0, close_window, &vars);
+	mlx_do_sync(vars.mlx);
 	mlx_key_hook(vars.win, key_hook, &vars);
 	img.img = mlx_xpm_file_to_image(vars.mlx, relative_path, &img_width, &img_height);
 	if (!img.img)
@@ -119,9 +161,10 @@ int main(int argc, char const *argv[])
 		printf("mlx_get_data_addr failed\n");
 	    return 1;
 	}
+	//mlx_put_image_to_window(vars.mlx, vars.win, img.img, img.x, img.y);
 	vars.img = &img;
+	mlx_do_sync(vars.mlx);
 	mlx_loop_hook(vars.mlx, render_next_frame, &vars);
-	//mlx_key_hook(vars.win, animation_hook, &vars); the step count doesnt work
 	mlx_loop(vars.mlx);
 	return 0;
 }

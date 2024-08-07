@@ -1,0 +1,32 @@
+/* XPM */
+static char *c979de1bf7b24a5ea3d971958055ec1b59V4EDuT1KTil6HD[] = {
+/* columns rows colors chars-per-pixel */
+"62 16 11 1 ",
+"  c None",
+". c black",
+"X c #495900",
+"o c #794100",
+"O c #C37100",
+" c #8A8A00",
+"@ c #FFA200",
+"# c #305182",
+"$ c #4192C3",
+"% c #61D3E3",
+"& c #A2FFF3",
+/* pixels */
+"+++++X+++++++++++++++X++++++++++++++X+++++++++++++++X+++++++++",
+"+++++X++X+++++++++XXXX++++++++++++++X++X+++++++++XXXX+++++++++",
+"+++++X+X+X+++++X+X++XX+X++++++++++++X+X+X+++++X+X++XX+X+++++++",
+"+++++X+++++X++++X+++XX++X++X++++++++X+++++X++++X+++XX++X++X+++",
+"++++X.+++++X+++X+X+++.XXXXX++++++++X.+++++X+++X+X+++.XXXXX++++",
+"XXX....XXXX.XXXXXXXX...XXXXXXX.XXX....XXXX.XXXXXXXX...XXXXXXX.",
+"X+++++++++++++XX+++++++++++++++X+++++++++++++XX+++++++++++++++",
+"++++++X+X+X++++X+++++++X+++++XX++++++X+X+X++++X+++++++X+++++XX",
+"+++X+XX++X+++++X++X+X+X+X+XXXXX+++X+XX++X+++++X++X+X+X+X+XXXXX",
+"+++XXX+++++++++XX+XXX++XXXXXXXX+++XXX+++++++++XX+XXX++XXXXXXXX",
+"+++XX++++++++++..XXXXX.XXXXXXXX+++XX++++++++++..XXXXX.XXXXXXXX",
+"++X+X+++++++++++++++++X+++++++X++X+X+++++++++++++++++X+++++++X",
+"+++X+X++++++X++++X++++X+++++++++++X+X++++++X++++X++++X++++++++",
+"+++XXX++++++X+++++XX+XX++X+X++X+++XXX++++++X+++++XX+XX++X+X++X",
+"X++++X+++++X++X+XX+X+X.+X++++XXX++++X+++++X++X+XX+X+X.+X++++XX",
+"XXXXX.X...X.XXXXXXXXX..XXXXXXXXXXXXX.X...X.XXXXXXXXX..XXXXXXXX"
