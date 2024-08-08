@@ -6,11 +6,11 @@
 /*   By: gmunoz <gmunoz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/19 15:48:40 by gmunoz            #+#    #+#             */
-/*   Updated: 2024/08/07 18:38:59 by gmunoz           ###   ########.fr       */
+/*   Updated: 2024/08/08 18:15:53 by gmunoz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "colors.h"
+#include "../inc/game.h"
 #include <mlx.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -34,7 +34,30 @@ typedef struct	s_vars {
 	t_data	*img;
 }				t_vars;
 
-int	close(int keycode, t_vars *vars)
+char	**sort_map(char const *argv)
+{
+	
+}
+
+char	**map_check(int argc, char const **argv)
+{
+	char	**map;
+	
+	if (argc != 2)
+	{
+		printf("wrong number of arguments\n");
+		exit(1);
+	}
+	if (ft_strnstr(argv[1], ".ber", ft_strlen(argv[1])) == NULL)
+	{
+		printf("wrong file extension\n");
+		exit(1);
+	}
+	map = sort_map(argv[1]);
+	return (map);
+}
+
+int	close_win(int keycode, t_vars *vars)
 {
 	if (keycode == 65307)
 	{
@@ -62,7 +85,7 @@ int	key_hook(int keycode, t_vars *vars, t_data *img)
 			mlx_put_image_to_window(vars->mlx, vars->win, vars->img->img, img->x, img->y);
 			printf("number of steps = %d\n", vars->steps);
 			vars->steps++;
-		}
+		}	
 		printf("y = %d\n", img->y);
 	}
 	if (keycode == 97)
@@ -110,34 +133,38 @@ int	render_next_frame(t_vars *vars)
 	return (0);
 }
 
-int main(int argc, char const *argv[])
+int main(int argc, char const **argv)
 {
 	t_data	img;
 	t_vars	vars;
-	char	*relative_path = "./char_trial.xpm";
-	char	*relative_path2 = "./floor-tileset.xpm";
+	char	**map;
+	char	*relative_path = "sprites/char_trial.xpm";
+	char	*relative_path2 = "sprites/floor-tileset.xpm";
 	int		img_width;
 	int		img_height;
 
 	img.x = 128;
 	img.y = 128;
 	vars.steps = 1;
-	(void)argc;
-	(void)argv;
+	map = map_check(argc, argv);
+	if (!map)
+	{
+		printf("map_check failed\n");
+		return 1;
+	}
 	vars.mlx = mlx_init();
 	if (!vars.mlx)
 	{
 	    printf("mlx_init failed\n");
 	    return 1;
 	}
-	
 	vars.win = mlx_new_window(vars.mlx, 1920, 1080, "Tudi Gaimu");
 	if (!vars.win)
 	{
 	    printf("mlx_new_window failed\n");
 	    return 1;
 	}
-	mlx_hook(vars.win, 2, 1L<<0, close, &vars);
+	mlx_hook(vars.win, 2, 1L<<0, close_win, &vars);
 	mlx_hook(vars.win, 17, 1L<<0, close_window, &vars);
 	mlx_do_sync(vars.mlx);
 	mlx_key_hook(vars.win, key_hook, &vars);
@@ -151,7 +178,7 @@ int main(int argc, char const *argv[])
 	img.img2 = mlx_xpm_file_to_image(vars.mlx, relative_path2, &img_width, &img_height);
 	if (!img.img2)
 	{
-	    printf("mlx_xpm_file_to_image failed\n");
+	    printf("mlx_xpm_file_to_image2 failed\n");
 	    return 1;
 	}
 

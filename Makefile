@@ -6,7 +6,7 @@
 #    By: gmunoz <gmunoz@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/06/19 16:48:58 by gmunoz            #+#    #+#              #
-#    Updated: 2024/06/20 16:45:01 by gmunoz           ###   ########.fr        #
+#    Updated: 2024/08/08 16:41:16 by gmunoz           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -42,46 +42,48 @@ RENDER = render_linux.c
 GRATE = GAME_RATE=80
 CDEBUG =
 
+# Executable name
+NAME = so_long
+
+# Libft
+LIBFT = ./Libft/libft.a
+
 # Compiler
-CC = gcc	
+CC = gcc
 
 # Compiler flags
 CFLAGS      = -Wall -Werror -Wextra -I/usr/include -Imlx_linux
 MLX_FLAGS   = -Lmlx_linux -lmlx_Linux -L/usr/lib -Imlx_linux -lXext -lX11 -lm -lz
 
 # Source files
-SRCS = main.c
+SRC = src/main.c gnl/get_next_line.c gnl/get_next_line_utils.c
 
 # Object files
-OBJS = $(SRCS:.c=.o)
-
-# Header file
-HEADER = push_swap.h
-
-# Executable name
-NAME = so_long
+OBJS = $(SRC:.c=.o)
 
 # Default NAME
 all: $(NAME)
 
-%.o: %.c
-	$(CC) $(CFLAGS) -c $< -o $@
+$(NAME): $(OBJS)
+	$(MAKE) -C mlx_linux
+	$(MAKE) -C Libft
+	$(CC) $(CFLAGS) $(OBJS) $(LIBFT) $(MLX_FLAGS) -o $(NAME)
 
 # Link object files into the executable
 $(NAME): $(OBJS)
-	@$(MAKE) -C mlx_linux
-	$(CC) $(OBJS) $(MLX_FLAGS) -o $(NAME)
 
 # Clean up generated files
 clean:
-	@$(MAKE) clean -C mlx_linux
+	$(MAKE) clean -C mlx_linux
+	$(MAKE) fclean -C Libft
 	rm -f $(OBJS)
 
 # Clean up everything
-fclean:
-	rm -f $(NAME) $(OBJS)
+fclean: clean
+	rm -f $(NAME)
 
 # Re-compile everything
-re: fclean all
+re: fclean
+	make all
 
 .PHONY: all clean fclean re
