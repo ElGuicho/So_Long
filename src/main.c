@@ -6,14 +6,11 @@
 /*   By: gmunoz <gmunoz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/19 15:48:40 by gmunoz            #+#    #+#             */
-/*   Updated: 2024/08/08 18:15:53 by gmunoz           ###   ########.fr       */
+/*   Updated: 2024/08/08 20:04:29 by gmunoz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/game.h"
-#include <mlx.h>
-#include <stdio.h>
-#include <stdlib.h>
 
 typedef struct	s_data {
 	void	*img;
@@ -34,26 +31,93 @@ typedef struct	s_vars {
 	t_data	*img;
 }				t_vars;
 
-char	**sort_map(char const *argv)
+char	**sort_map(char const *argv, t_map *lay)
 {
+	int		fd;
+	int		i;
+	char	*line;
 	
+	fd = open(argv, O_RDONLY);
+	if (fd == -1)
+	{
+		printf("open failed\n");
+		return (NULL);
+	}
+	while (1)
+	{
+		i = 0;
+		line = get_next_line(fd);
+		if (!line)
+		{
+			ft_printf("map is empty\n");
+			return (NULL);
+		}
+		if (lay->n_row == 0)
+		{
+			lay->n_col = ft_strlen(line);
+			while (line[i] < ft_strlen(line))
+			{
+				if (line[i] != '1')
+				{
+					ft_printf("map is not closed\n");
+					return (NULL);
+				}
+				i++;
+			}
+		}
+		else if (line[0] != '1' || line[ft_strlen(line) - 1] != '1')
+		{
+			ft_printf("map is not closed\n");
+			return (NULL);
+		}
+		if (lay->n_col != ft_strlen(line))
+		{
+			ft_printf("map is not rectangular\n");
+			return (NULL);
+		}
+		while (line[i] < ft_strlen(line))
+		{
+			if (line[i] == 'P')
+			{
+				lay->player_x = i;
+				lay->player_y = lay->n_row;
+				lay->player = 1;
+			}
+			// put C and E here
+			i++;
+		}
+		lay->n_row++;
+	}
+	i = 0;
+	while (line[i] < ft_strlen(line))
+	{
+		if (line[i] != '1')
+		{
+			ft_printf("map is not closed\n");
+			return (NULL);
+		}
+		i++;
+	}
+	close(fd);
 }
 
-char	**map_check(int argc, char const **argv)
+char	**map_check(int argc, char const **argv, t_map *lay)
 {
 	char	**map;
 	
 	if (argc != 2)
 	{
 		printf("wrong number of arguments\n");
-		exit(1);
+		return (NULL);
 	}
 	if (ft_strnstr(argv[1], ".ber", ft_strlen(argv[1])) == NULL)
 	{
 		printf("wrong file extension\n");
-		exit(1);
+		return (NULL);
 	}
-	map = sort_map(argv[1]);
+	map = sort_map(argv[1], lay);
+	if (map == NULL)
+		return (NULL);
 	return (map);
 }
 
@@ -137,6 +201,7 @@ int main(int argc, char const **argv)
 {
 	t_data	img;
 	t_vars	vars;
+	t_map	*lay;
 	char	**map;
 	char	*relative_path = "sprites/char_trial.xpm";
 	char	*relative_path2 = "sprites/floor-tileset.xpm";
@@ -146,8 +211,8 @@ int main(int argc, char const **argv)
 	img.x = 128;
 	img.y = 128;
 	vars.steps = 1;
-	map = map_check(argc, argv);
-	if (!map)
+	map = map_check(argc, argv, lay);
+	if (map == NULL)
 	{
 		printf("map_check failed\n");
 		return 1;
