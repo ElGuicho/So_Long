@@ -6,7 +6,7 @@
 /*   By: gmunoz <gmunoz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/08 15:13:11 by gmunoz            #+#    #+#             */
-/*   Updated: 2024/08/08 19:51:44 by gmunoz           ###   ########.fr       */
+/*   Updated: 2024/08/12 15:51:58 by gmunoz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,8 @@ typedef struct	s_map {
 	int		player;
 	int		player_x;
 	int		player_y;
+	int		collect;
+	int		exit;
 	char	**map;
 }				t_map;
 

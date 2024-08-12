@@ -1,6 +1,6 @@
 #include "get_next_line.h"
 
-int	ft_strlen(const char *str)
+int	gnl_strlen(const char *str)
 {
 	int	i;
 
@@ -12,7 +12,7 @@ int	ft_strlen(const char *str)
 	return (i);
 }
 
-void	*ft_calloc(int count, int size)
+void	*gnl_calloc(int count, int size)
 {
 	char	*total;
 	int		i;
@@ -31,7 +31,7 @@ void	*ft_calloc(int count, int size)
 	return (total);
 }
 
-char	*ft_strchr(const char *str, int c)
+char	*gnl_strchr(const char *str, int c)
 {
 	int		i;
 	char	*ptr;
@@ -41,7 +41,7 @@ char	*ft_strchr(const char *str, int c)
 		return (NULL);
 	if ((unsigned char)c == '\0')
 	{
-		ptr = (char *)&str[ft_strlen(str)];
+		ptr = (char *)&str[gnl_strlen(str)];
 		return (ptr);
 	}
 	while (str[i] != '\0')
@@ -56,7 +56,7 @@ char	*ft_strchr(const char *str, int c)
 	return (0);
 }
 
-char	*ft_strjoin(char *s1, char *s2)
+char	*gnl_strjoin(char *s1, char *s2)
 {
 	char	*newstr;
 	int		i;
@@ -65,10 +65,10 @@ char	*ft_strjoin(char *s1, char *s2)
 	i = 0;
 	j = 0;
 	if (!s1)
-		s1 = ft_calloc(1, 1);
+		s1 = gnl_calloc(1, 1);
 	if (!s1 || !s2)
 		return (NULL);
-	newstr = ft_calloc(ft_strlen(s1) + ft_strlen(s2) + 1, 1);
+	newstr = gnl_calloc(gnl_strlen(s1) + gnl_strlen(s2) + 1, 1);
 	if (!newstr)
 		return (free(s1), NULL);
 	while (s1 && s1[i] != '\0')

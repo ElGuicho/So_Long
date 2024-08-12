@@ -6,7 +6,7 @@
 #    By: gmunoz <gmunoz@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/09/12 12:03:13 by gmunoz            #+#    #+#              #
-#    Updated: 2024/04/17 14:31:27 by gmunoz           ###   ########.fr        #
+#    Updated: 2024/08/12 18:31:12 by gmunoz           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -48,7 +48,7 @@ $(FT_PRINTF):
 # Link object files into the executable
 $(NAME): $(OBJS)
 	@$(MAKE) -C ft_printf
-	ar -rcs $(NAME) $(OBJS)
+	ar -rcs $(NAME) $(OBJS) ft_printf/*.o
 	ranlib $(NAME)
 
 # Include bonus functions on libft.a

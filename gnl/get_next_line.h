@@ -10,11 +10,11 @@
 # include <stdlib.h>
 # include <unistd.h>
 
-void	*ft_calloc(int count, int size);
-int		ft_strlen(const char *str);
-char	*ft_strchr(const char *s, int i);
-char	*ft_strdup(const char *s);
-char	*ft_strjoin(char *s1, char *s2);
+void	*gnl_calloc(int count, int size);
+int		gnl_strlen(const char *str);
+char	*gnl_strchr(const char *s, int i);
+char	*gnl_strdup(const char *s);
+char	*gnl_strjoin(char *s1, char *s2);
 char	*get_next_line(int fd);
 
 #endif

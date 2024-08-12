@@ -15,10 +15,10 @@ static char	*txt_split(int fd, char *buffer, char *backup)
 			break ;
 		buffer[byte_nb] = '\0';
 		temp = backup;
-		backup = ft_strjoin(temp, buffer);
+		backup = gnl_strjoin(temp, buffer);
 		if (!backup)
 			return (NULL);
-		if (ft_strchr(buffer, '\n'))
+		if (gnl_strchr(buffer, '\n'))
 			break ;
 	}
 	return (backup);
@@ -50,7 +50,7 @@ static char	*leftovers(char *newstr)
 		return (NULL);
 	while (newstr[i] != '\n')
 		i++;
-	backup = ft_calloc(ft_strlen(newstr) - i, 1);
+	backup = gnl_calloc(gnl_strlen(newstr) - i, 1);
 	if (!backup)
 		return (free(newstr), NULL);
 	i++;
@@ -76,7 +76,7 @@ static char	*extract(char *newstr)
 		i++;
 	if (newstr[i] == '\n')
 		i++;
-	final_str = ft_calloc(i + 1, 1);
+	final_str = gnl_calloc(i + 1, 1);
 	if (!final_str)
 		return (free(newstr), NULL);
 	while (j < i)
@@ -96,7 +96,7 @@ char	*get_next_line(int fd)
 
 	if (fd < 0 || BUFFER_SIZE < 0)
 		return (free(backup), backup = NULL, NULL);
-	buffer = (char *)ft_calloc(BUFFER_SIZE + 1, 1);
+	buffer = (char *)gnl_calloc(BUFFER_SIZE + 1, 1);
 	if (!buffer)
 		return (free(backup), backup = NULL, NULL);
 	newstr = txt_split(fd, buffer, backup);
