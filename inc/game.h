@@ -6,7 +6,7 @@
 /*   By: gmunoz <gmunoz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/08 15:13:11 by gmunoz            #+#    #+#             */
-/*   Updated: 2024/08/12 15:51:58 by gmunoz           ###   ########.fr       */
+/*   Updated: 2024/08/14 17:02:54 by gmunoz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,5 +33,30 @@ typedef struct	s_map {
 	int		exit;
 	char	**map;
 }				t_map;
+
+typedef struct	s_data {
+	void	*img;
+	void	*img2;
+	char	*addr;
+	int		bits_per_pixel;
+	int		line_length;
+	int		endian;
+	int		x;
+	int		y;
+}				t_data;
+
+typedef struct	s_vars {
+	void	*mlx;
+	void	*win;
+	int		steps;
+	int		screen_size;
+	t_data	*img;
+	t_map	*lay;
+}				t_vars;
+
+int	close_win(int keycode, t_vars *vars);
+int	close_window(t_vars *vars);
+int	key_hook(int keycode, t_vars *vars);
+int	render_next_frame(t_vars *vars);
 
 #endif

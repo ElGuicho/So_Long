@@ -6,30 +6,23 @@
 /*   By: gmunoz <gmunoz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/19 15:48:40 by gmunoz            #+#    #+#             */
-/*   Updated: 2024/08/12 19:08:59 by gmunoz           ###   ########.fr       */
+/*   Updated: 2024/08/14 18:49:02 by gmunoz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/game.h"
 
-typedef struct	s_data {
-	void	*img;
-	void	*img2;
-	char	*addr;
-	int		bits_per_pixel;
-	int		line_length;
-	int		endian;
-	int		x;
-	int		y;
-}				t_data;
-
-typedef struct	s_vars {
-	void	*mlx;
-	void	*win;
-	int		steps;
-	int		screen_size;
-	t_data	*img;
-}				t_vars;
+void	init_vars(t_vars *vars, t_map *lay, t_data *img)
+{
+	img->x = 128;
+	img->y = 128;
+	vars->steps = 0;
+	lay->collect = 0;
+	lay->exit = 0;
+	lay->player = 0;
+	lay->n_row = 0;
+	lay->map = NULL;
+}
 
 int	map_err(char *line, t_map *lay, int i)
 {
@@ -47,7 +40,7 @@ int	map_err(char *line, t_map *lay, int i)
 	}
 	if (lay->n_row == 0)
 	{
-		lay->n_col = gnl_strlen(line);
+		lay->n_col = gnl_strlen(line) - 1;
 		while (line[i] < gnl_strlen(line))
 		{
 			if (line[i] != '1')
@@ -66,7 +59,7 @@ int	map_err(char *line, t_map *lay, int i)
 		ft_printf("map is not closed\n");
 		return (0);
 	}
-	if (lay->n_col != gnl_strlen(line))
+	if (lay->n_col != gnl_strlen(line) - 1)
 	{
 		ft_printf("map is not rectangular\n");
 		return (0);
@@ -76,7 +69,7 @@ int	map_err(char *line, t_map *lay, int i)
 
 char	*check_char(char *line, t_map *lay, int i, char *map)
 {
-	while (line[i] < gnl_strlen(line))
+	while (i < gnl_strlen(line))
 	{
 		if (line[i] == 'P')
 		{
@@ -106,8 +99,7 @@ char	**sort_map(char const *argv, t_map *lay)
 	int		i;
 	char	*line;
 	char	*map;
-	
-	lay->collect = 0;
+
 	map = NULL;
 	fd = open(argv, O_RDONLY);
 	if (fd == -1)
@@ -164,104 +156,40 @@ char	**map_check(int argc, char const **argv, t_map *lay)
 	return (map);
 }
 
-int	close_win(int keycode, t_vars *vars)
-{
-	if (keycode == 65307)
-	{
-        mlx_destroy_window(vars->mlx, vars->win);
-        exit(0);
-    }
-    return (0);
-}
-int close_window(t_vars *vars)
-{
-    mlx_destroy_window(vars->mlx, vars->win);
-    exit(0);
-}
-
-int	key_hook(int keycode, t_vars *vars, t_data *img)
-{
-/* 	ft_printf("x = %d\n", img->x);
-	ft_printf("y = %d\n", img->y); */
-	if (keycode == 119)
-	{
-		if (img->y > 33)
-		{
-			mlx_put_image_to_window(vars->mlx, vars->win, vars->img->img2, img->x, img->y);
-			img->y -= 128;
-			mlx_put_image_to_window(vars->mlx, vars->win, vars->img->img, img->x, img->y);
-			ft_printf("number of steps = %d\n", vars->steps);
-			vars->steps++;
-		}	
-		ft_printf("y = %d\n", img->y);
-	}
-	if (keycode == 97)
-	{
-		if (img->x > 0)
-		{
-			mlx_put_image_to_window(vars->mlx, vars->win, vars->img->img2, img->x, img->y);
-			img->x -= 128;	
-			mlx_put_image_to_window(vars->mlx, vars->win, vars->img->img, img->x, img->y);
-			ft_printf("number of steps = %d\n", vars->steps);
-			vars->steps++;
-		}
-		ft_printf("x = %d\n", img->x);
-	}
-	if (keycode == 115)
-	{
-		if (img->y < 929)
-		{
-			mlx_put_image_to_window(vars->mlx, vars->win, vars->img->img2, img->x, img->y);
-			img->y += 128;	
-			mlx_put_image_to_window(vars->mlx, vars->win, vars->img->img, img->x, img->y);
-			ft_printf("number of steps = %d\n", vars->steps);
-			vars->steps++;
-		}
-		ft_printf("y = %d\n", img->y);
-	}
-	if (keycode == 100)
-	{
-		if (img->x < 1792)
-		{
-			mlx_put_image_to_window(vars->mlx, vars->win, vars->img->img2, img->x, img->y);
-			img->x += 128;	
-			mlx_put_image_to_window(vars->mlx, vars->win, vars->img->img, img->x, img->y);
-			ft_printf("number of steps = %d\n", vars->steps);
-			vars->steps++;
-		}
-		ft_printf("x = %d\n", img->x);
-	}
-	return (0);
-}
-
-int	render_next_frame(t_vars *vars)
-{
-	mlx_put_image_to_window(vars->mlx, vars->win, vars->img->img, 0, 161);
-	return (0);
-}
-
 int main(int argc, char const **argv)
 {
-	t_data	img;
-	t_vars	vars;
+	t_data	*img;
+	t_vars	*vars;
 	t_map	*lay;
-	char	**map;
 	char	*relative_path = "sprites/char_trial.xpm";
 	char	*relative_path2 = "sprites/floor-tileset.xpm";
 	int		img_width;
 	int		img_height;
 
-	img.x = 128;
-	img.y = 128;
-	vars.steps = 1;
+	vars = malloc(sizeof(t_vars));
+	if (vars == NULL)
+	{
+		ft_printf("vars malloc failed\n");
+		return 1;
+	}
+	img = malloc(sizeof(t_data));
+	if (img == NULL)
+	{
+		ft_printf("img malloc failed\n");
+		free(vars);
+		return 1;
+	}
 	lay = malloc(sizeof(t_map));
 	if (lay == NULL)
 	{
 		ft_printf("lay malloc failed\n");
+		free(vars);
+		free(img);
 		return 1;
 	}
-	map = map_check(argc, argv, lay);
-	if (map == NULL)
+	init_vars(vars, lay, img);
+	lay->map = map_check(argc, argv, lay);
+	if (lay->map == NULL)
 	{
 		ft_printf("map_check failed\n");
 		return 1;
@@ -274,52 +202,54 @@ int main(int argc, char const **argv)
 	}
 	else
 		ft_printf("map is read and valid\n");
-	vars.mlx = mlx_init();
-	if (!vars.mlx)
+	vars->mlx = mlx_init();
+	if (!vars->mlx)
 	{
 	    ft_printf("mlx_init failed\n");
-	    return 1;
+		return 1;
 	}
-	vars.win = mlx_new_window(vars.mlx, 1920, 1080, "Tudi Gaimu");
-	if (!vars.win)
+	vars->win = mlx_new_window(vars->mlx, lay->n_col * 64, \
+		lay->n_row * 128, "Tudi Gaimu");
+	//vars->win = mlx_new_window(vars->mlx, 1920, 1080, "Tudi Gaimu");
+	if (!vars->win)
 	{
 	    ft_printf("mlx_new_window failed\n");
 	    return 1;
 	}
-	mlx_hook(vars.win, 2, 1L<<0, close_win, &vars);
-	mlx_hook(vars.win, 17, 1L<<0, close_window, &vars);
-	mlx_do_sync(vars.mlx);
-	mlx_key_hook(vars.win, key_hook, &vars);
-	img.img = mlx_xpm_file_to_image(vars.mlx, relative_path, &img_width, &img_height);
-	if (!img.img)
+	mlx_hook(vars->win, 2, 1L<<0, close_win, vars);
+	mlx_hook(vars->win, 17, 1L<<0, close_window, vars);
+	mlx_do_sync(vars->mlx);
+	mlx_key_hook(vars->win, key_hook, vars);
+	img->img = mlx_xpm_file_to_image(vars->mlx, relative_path, &img_width, &img_height);
+	if (!img->img)
 	{
 	    ft_printf("mlx_xpm_file_to_image failed\n");
 	    return 1;
 	}
 
-	img.img2 = mlx_xpm_file_to_image(vars.mlx, relative_path2, &img_width, &img_height);
-	if (!img.img2)
+	img->img2 = mlx_xpm_file_to_image(vars->mlx, relative_path2, &img_width, &img_height);
+	if (!img->img2)
 	{
 	    ft_printf("mlx_xpm_file_to_image2 failed\n");
 	    return 1;
 	}
 
-	img.addr = mlx_get_data_addr(img.img, &img.bits_per_pixel, &img.line_length, &img.endian);
-	if (!img.addr)
+	img->addr = mlx_get_data_addr(img->img, &img->bits_per_pixel, &img->line_length, &img->endian);
+	if (!img->addr)
 	{
 		ft_printf("mlx_get_data_addr failed\n");
 	    return 1;
 	}
-	//mlx_put_image_to_window(vars.mlx, vars.win, img.img, img.x, img.y);
-	vars.img = &img;
-	mlx_do_sync(vars.mlx);
-	mlx_loop_hook(vars.mlx, render_next_frame, &vars);
-	mlx_loop(vars.mlx);
+	//mlx_put_image_to_window(vars->mlx, vars->win, img->img, img->x, img->y);
+	vars->img = img;
+	mlx_do_sync(vars->mlx);
+	mlx_loop_hook(vars->mlx, render_next_frame, vars);
+	mlx_loop(vars->mlx);
 	return 0;
 }
 
 /* 
-img.img = mlx_new_image(mlx, 1920, 1080);
+img->img = mlx_new_image(mlx, 1920, 1080);
 ft_mlx_pixel_put(&img, 5, 5, 0x00FF0000);
 
 void	ft_mlx_pixel_put(t_data *data, int x, int y, int color)
@@ -332,7 +262,7 @@ void	ft_mlx_pixel_put(t_data *data, int x, int y, int color)
 
 
 /*
-mlx_mouse_hook(vars.win, mouse_hook, &vars);
+mlx_mouse_hook(vars->win, mouse_hook, &vars);
 
 int mouse_hook(int button, int x, int y, t_vars *vars)
 {
