@@ -6,7 +6,7 @@
 /*   By: gmunoz <gmunoz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/19 15:48:40 by gmunoz            #+#    #+#             */
-/*   Updated: 2024/08/14 18:49:02 by gmunoz           ###   ########.fr       */
+/*   Updated: 2024/08/15 14:33:05 by gmunoz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,17 +31,33 @@ int	map_err(char *line, t_map *lay, int i)
 		ft_printf("map is empty\n");
 		return (0);
 	}
-	if (line[gnl_strlen(line) - 1] != '\n' && line[gnl_strlen(line)] == '\0')
+	if (line[gnl_strlen(line) - 1] != '\n')
 	{
-		ft_printf("last char is: %c\n", line[gnl_strlen(line) - 1]);
-		ft_printf("lay n_row = %d\n", lay->n_row);
-		ft_printf("map is read\n");
-		return (2);
+		while (line[i] != '\0')
+		{
+			if (line[i] != '1')
+			{
+				ft_printf("map is not closed\n");
+				return (0);
+			}
+			i++;
+		}
+		if (lay->n_col == gnl_strlen(line))
+		{
+			ft_printf("map is read\n");
+			return (2);
+		}
+		else
+		{
+			ft_printf("map is not rectangular\n");
+			return (0);
+		}
 	}
 	if (lay->n_row == 0)
 	{
+		i = 0;
 		lay->n_col = gnl_strlen(line) - 1;
-		while (line[i] < gnl_strlen(line))
+		while (i < gnl_strlen(line) - 1)
 		{
 			if (line[i] != '1')
 			{
@@ -187,6 +203,27 @@ int main(int argc, char const **argv)
 		free(img);
 		return 1;
 	}
+	if (vars->img == NULL)
+		vars->img = malloc(sizeof(t_data));
+	if (vars->img == NULL)
+	{
+		ft_printf("vars img malloc failed\n");
+		free(vars);
+		free(img);
+		free(lay);
+		return 1;
+	}
+	if (vars->lay == NULL)
+		vars->lay = malloc(sizeof(t_map));
+	if (vars->lay == NULL)
+	{
+		ft_printf("vars lay malloc failed\n");
+		free(vars);
+		free(img);
+		free(lay);
+		free(vars->img);
+		return 1;
+	}
 	init_vars(vars, lay, img);
 	lay->map = map_check(argc, argv, lay);
 	if (lay->map == NULL)
@@ -208,9 +245,11 @@ int main(int argc, char const **argv)
 	    ft_printf("mlx_init failed\n");
 		return 1;
 	}
+	ft_printf("lay n_row = %d\n", lay->n_row);
+	ft_printf("lay n_col = %d\n", lay->n_col);
 	vars->win = mlx_new_window(vars->mlx, lay->n_col * 64, \
 		lay->n_row * 128, "Tudi Gaimu");
-	//vars->win = mlx_new_window(vars->mlx, 1920, 1080, "Tudi Gaimu");
+	//vars->win = mlx_new_window(vars->mlx, 1920, 1080, "Tudi Gaimu"); 2176 x 768
 	if (!vars->win)
 	{
 	    ft_printf("mlx_new_window failed\n");
