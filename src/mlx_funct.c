@@ -6,7 +6,7 @@
 /*   By: gmunoz <gmunoz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/14 15:50:46 by gmunoz            #+#    #+#             */
-/*   Updated: 2024/08/14 19:04:21 by gmunoz           ###   ########.fr       */
+/*   Updated: 2024/08/15 18:03:18 by gmunoz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,80 +17,80 @@ int	close_win(int keycode, t_vars *vars)
 	if (keycode == 65307)
 	{
         mlx_destroy_window(vars->mlx, vars->win);
-        exit(0);
+        return (0);
     }
-    return (0);
+    return (1);
 }
 int close_window(t_vars *vars)
 {
     mlx_destroy_window(vars->mlx, vars->win);
-    exit(0);
+    return (0);
 }
 
 int	key_hook(int keycode, t_vars *vars)
 {
-/* 	ft_printf("x = %d\n", img->x);
-	ft_printf("y = %d\n", img->y); */
-	t_data *img;
+/* 	ft_printf("x = %d\n", vars->img->x);
+	ft_printf("y = %d\n", vars->img->y); */
+/* 	t_data *img;
 	t_map *lay;
 
 	img = vars->img;
-	lay = vars->lay;
+	lay = vars->lay; */
 	if (keycode == 119)
 	{
-		if (img->y > 33)
+		if (vars->img->y > 33)
 		{
-			//ft_printf("n_row = %d\n", lay->n_row);
-			mlx_put_image_to_window(vars->mlx, vars->win, img->img2, img->x, img->y);
-			img->y -= 128;
-			mlx_put_image_to_window(vars->mlx, vars->win, img->img, img->x, img->y);
+			//ft_printf("n_row = %d\n", vars->lay->n_row);
+			mlx_put_image_to_window(vars->mlx, vars->win, vars->img->img2, vars->img->x, vars->img->y);
+			vars->img->y -= 64;
+			//mlx_put_image_to_window(vars->mlx, vars->win, vars->img->img, vars->img->x, vars->img->y);
 			vars->steps++;
 			ft_printf("number of steps = %d\n", vars->steps);
 		}	
-		ft_printf("y = %d\n", img->y);
+		ft_printf("y = %d\n", vars->img->y);
 	}
 	if (keycode == 97)
 	{
-		if (img->x > 0)
+		if (vars->img->x > 0)
 		{
-			mlx_put_image_to_window(vars->mlx, vars->win, img->img2, img->x, img->y);
-			img->x -= 128;	
-			mlx_put_image_to_window(vars->mlx, vars->win, img->img, img->x, img->y);
+			mlx_put_image_to_window(vars->mlx, vars->win, vars->img->img2, vars->img->x, vars->img->y);
+			vars->img->x -= 64;	
+			//mlx_put_image_to_window(vars->mlx, vars->win, vars->img->img, vars->img->x, vars->img->y);
 			vars->steps++;
 			ft_printf("number of steps = %d\n", vars->steps);
 		}
-		ft_printf("x = %d\n", img->x);
+		ft_printf("x = %d\n", vars->img->x);
 	}
 	if (keycode == 115)
 	{
-		//ft_printf("n_row = %d\n", lay->n_row);
-		if (img->y < (lay->n_row * 128))
+		//ft_printf("n_row = %d\n", vars->lay->n_row);
+		if (vars->img->y < (vars->lay->n_row * 64) - 64)
 		{
-			mlx_put_image_to_window(vars->mlx, vars->win, img->img2, img->x, img->y);
-			img->y += 128;	
-			mlx_put_image_to_window(vars->mlx, vars->win, img->img, img->x, img->y);
+			mlx_put_image_to_window(vars->mlx, vars->win, vars->img->img2, vars->img->x, vars->img->y);
+			vars->img->y += 64;	
+			//mlx_put_image_to_window(vars->mlx, vars->win, vars->img->img, vars->img->x, vars->img->y);
 			vars->steps++;
 			ft_printf("number of steps = %d\n", vars->steps);
 		}
-		ft_printf("y = %d\n", img->y);
+		ft_printf("y = %d\n", vars->img->y);
 	}
 	if (keycode == 100)
 	{
-		if (img->x < (lay->n_col * 64))
+		if (vars->img->x < (vars->lay->n_col * 64) - 64)
 		{
-			mlx_put_image_to_window(vars->mlx, vars->win, img->img2, img->x, img->y);
-			img->x += 128;	
-			mlx_put_image_to_window(vars->mlx, vars->win, img->img, img->x, img->y);
+			mlx_put_image_to_window(vars->mlx, vars->win, vars->img->img2, vars->img->x, vars->img->y);
+			vars->img->x += 64;	
+			//mlx_put_image_to_window(vars->mlx, vars->win, vars->img->img, vars->img->x, vars->img->y);
 			vars->steps++;
 			ft_printf("number of steps = %d\n", vars->steps);
 		}
-		ft_printf("x = %d\n", img->x);
+		ft_printf("x = %d\n", vars->img->x);
 	}
 	return (0);
 }
 
 int	render_next_frame(t_vars *vars)
 {
-	mlx_put_image_to_window(vars->mlx, vars->win, vars->img->img, 0, 161);
+	mlx_put_image_to_window(vars->mlx, vars->win, vars->img->img, vars->img->x, vars->img->y);
 	return (0);
 }
