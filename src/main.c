@@ -6,7 +6,7 @@
 /*   By: gmunoz <gmunoz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/19 15:48:40 by gmunoz            #+#    #+#             */
-/*   Updated: 2024/08/15 18:51:43 by gmunoz           ###   ########.fr       */
+/*   Updated: 2024/08/20 19:20:37 by gmunoz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,10 @@
 
 void	freee(t_data *img, t_vars *vars, t_map *lay)
 {
-	if(vars)
+	if (vars)
 	{
+		if (vars->win)
+			free(vars->win);
 		if(vars->lay)
 			free(vars->lay);
 		if(vars->img)
@@ -29,7 +31,15 @@ void	freee(t_data *img, t_vars *vars, t_map *lay)
 		free(lay);
 	}
 	if (img)
+	{
+		if (img->img)
+			free(img->img);
+		if (img->img2)
+			free(img->img2);
+		if (img->addr)
+			free(img->addr);
 		free(img);
+	}
 }
 
 void	init_vars(t_vars *vars, t_map *lay, t_data *img)
@@ -198,8 +208,9 @@ int main(int argc, char const **argv)
 	t_data	*img;
 	t_vars	*vars;
 	t_map	*lay;
-	char	*relative_path = "sprites/char_trial2.xpm";
-	char	*relative_path2 = "sprites/floor-tileset.xpm";
+	char	*relative_path = "sprites/main_char.xpm";
+	char	*relative_path2 = "sprites/alternative_floor.xpm";
+	char	*wall_corner1 = "sprites/wall_corner1.xpm";
 	int		img_width;
 	int		img_height;
 
@@ -271,28 +282,30 @@ int main(int argc, char const **argv)
 	//vars->win = mlx_new_window(vars->mlx, 1920, 1080, "Tudi Gaimu"); 2176 x 768
 	if (!vars->win)
 	{
+		mlx_destroy_display(vars->mlx);
+		free(vars->win);
 	    ft_printf("mlx_new_window failed\n");
-		freee(img, vars, lay);
+		//freee(img, vars, lay);
 	    return (1);
 	}
 	if(mlx_hook(vars->win, 2, 1L<<0, close_win, vars) == 0)
 	{
-		freee(img, vars, lay);
+		//freee(img, vars, lay);
 		return (0);
 	}
 	if(mlx_hook(vars->win, 17, 1L<<0, close_window, vars) == 0)
 	{
-		freee(img, vars, lay);
+		//freee(img, vars, lay);
 		return (0);
 	}
-	mlx_do_sync(vars->mlx);
+	//mlx_do_sync(vars->mlx);
 	mlx_key_hook(vars->win, key_hook, vars);
 	img->img = mlx_xpm_file_to_image(vars->mlx, relative_path, &img_width, &img_height);
 	if (!img->img)
 	{
 	    ft_printf("mlx_xpm_file_to_image failed\n");
 		close_window(vars);
-		freee(img, vars, lay);
+		//freee(img, vars, lay);
 	    return (1);
 	}
 
@@ -301,7 +314,16 @@ int main(int argc, char const **argv)
 	{
 	    ft_printf("mlx_xpm_file_to_image2 failed\n");
 		close_window(vars);
-		freee(img, vars, lay);
+		//freee(img, vars, lay);
+	    return (1);
+	}
+	
+	img->wall_corner1 = mlx_xpm_file_to_image(vars->mlx, wall_corner1, &img_width, &img_height);
+	if (!img->wall_corner1)
+	{
+	    ft_printf("wall_corner1 failed\n");
+		close_window(vars);
+		//freee(img, vars, lay);
 	    return (1);
 	}
 
@@ -310,15 +332,15 @@ int main(int argc, char const **argv)
 	{
 		ft_printf("mlx_get_data_addr failed\n");
 		close_window(vars);
-		freee(img, vars, lay);
+		//freee(img, vars, lay);
 	    return (1);
 	}
 	//mlx_put_image_to_window(vars->mlx, vars->win, img->img, img->x, img->y);
 	vars->img = img;
-	mlx_do_sync(vars->mlx);
+	//mlx_do_sync(vars->mlx);
 	mlx_loop_hook(vars->mlx, render_next_frame, vars);
 	mlx_loop(vars->mlx);
-	freee(img, vars, lay);
+	//freee(img, vars, lay);
 	return 0;
 }
 
