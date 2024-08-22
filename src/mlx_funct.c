@@ -6,7 +6,7 @@
 /*   By: gmunoz <gmunoz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/14 15:50:46 by gmunoz            #+#    #+#             */
-/*   Updated: 2024/08/20 19:21:44 by gmunoz           ###   ########.fr       */
+/*   Updated: 2024/08/22 19:06:47 by gmunoz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,48 @@ int	key_hook(int keycode, t_vars *vars)
 
 int	render_next_frame(t_vars *vars)
 {
-	mlx_put_image_to_window(vars->mlx, vars->win, vars->img->wall_corner1, 0, 0);
-	mlx_put_image_to_window(vars->mlx, vars->win, vars->img->img, vars->img->x, vars->img->y);
+	int i;
+	int j;
+
+	i = 1;
+	mlx_put_image_to_window(vars->mlx, vars->win, vars->img->corner_up_left, 0, 0);
+	mlx_put_image_to_window(vars->mlx, vars->win, vars->img->corner_up_right, (vars->lay->n_col - 1) * 64, 0);
+	mlx_put_image_to_window(vars->mlx, vars->win, vars->img->corner_down_left, 0, (vars->lay->n_row - 1) * 64);
+	mlx_put_image_to_window(vars->mlx, vars->win, vars->img->corner_down_right, (vars->lay->n_col - 1) * 64, (vars->lay->n_row - 1) * 64);
+	while (i < vars->lay->n_col - 1)
+	{
+		mlx_put_image_to_window(vars->mlx, vars->win, vars->img->wall_up, i * 64, 0);
+		mlx_put_image_to_window(vars->mlx, vars->win, vars->img->wall_down, i * 64, (vars->lay->n_row - 1) * 64);
+		i++;
+	}
+	i = 1;
+	while (i < vars->lay->n_row - 1)
+	{
+		mlx_put_image_to_window(vars->mlx, vars->win, vars->img->wall_left, 0, i * 64);
+		mlx_put_image_to_window(vars->mlx, vars->win, vars->img->wall_right, (vars->lay->n_col - 1) * 64, i * 64);
+		i++;
+	}
+	i = 1;
+	j = 1;
+	while (j < vars->lay->n_row - 1)
+	{
+		while (i < vars->lay->n_col - 1)
+		{
+			/* if (vars->lay->map[j][i] == 'C')
+				mlx_put_image_to_window(vars->mlx, vars->win, vars->img->, i * 64, j * 64);
+			if (vars->lay->map[j][i] == 'E')
+				mlx_put_image_to_window(vars->mlx, vars->win, vars->img->, i * 64, j * 64); */
+			if (vars->lay->map[j][i] == '1')
+				mlx_put_image_to_window(vars->mlx, vars->win, vars->img->wall_up, i * 64, j * 64);
+			else
+				mlx_put_image_to_window(vars->mlx, vars->win, vars->img->img2, i * 64, j * 64);
+			i++;
+			if (vars->lay->map[j][i] == 'P')
+				mlx_put_image_to_window(vars->mlx, vars->win, vars->img->img, i * 64, j * 64);
+		}
+		i = 1;
+		j++;
+	}
+	//mlx_put_image_to_window(vars->mlx, vars->win, vars->img->img, vars->img->x, vars->img->y);
 	return (0);
 }

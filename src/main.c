@@ -6,7 +6,7 @@
 /*   By: gmunoz <gmunoz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/19 15:48:40 by gmunoz            #+#    #+#             */
-/*   Updated: 2024/08/20 19:20:37 by gmunoz           ###   ########.fr       */
+/*   Updated: 2024/08/22 18:18:06 by gmunoz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -210,7 +210,6 @@ int main(int argc, char const **argv)
 	t_map	*lay;
 	char	*relative_path = "sprites/main_char.xpm";
 	char	*relative_path2 = "sprites/alternative_floor.xpm";
-	char	*wall_corner1 = "sprites/wall_corner1.xpm";
 	int		img_width;
 	int		img_height;
 
@@ -318,10 +317,75 @@ int main(int argc, char const **argv)
 	    return (1);
 	}
 	
-	img->wall_corner1 = mlx_xpm_file_to_image(vars->mlx, wall_corner1, &img_width, &img_height);
-	if (!img->wall_corner1)
+	img->corner_up_left = mlx_xpm_file_to_image(vars->mlx, "sprites/corner_up_left.xpm", &img_width, &img_height);
+	if (!img->corner_up_left)
 	{
-	    ft_printf("wall_corner1 failed\n");
+	    ft_printf("corner_up_left failed\n");
+		close_window(vars);
+		//freee(img, vars, lay);
+	    return (1);
+	}
+
+	img->corner_up_right = mlx_xpm_file_to_image(vars->mlx, "sprites/corner_up_right.xpm", &img_width, &img_height);
+	if (!img->corner_up_right)
+	{
+	    ft_printf("corner_up_right failed\n");
+		close_window(vars);
+		//freee(img, vars, lay);
+	    return (1);
+	}
+
+	img->corner_down_left = mlx_xpm_file_to_image(vars->mlx, "sprites/corner_down_left.xpm", &img_width, &img_height);
+	if (!img->corner_down_left)
+	{
+	    ft_printf("corner_down_left failed\n");
+		close_window(vars);
+		//freee(img, vars, lay);
+	    return (1);
+	}
+
+	img->corner_down_right = mlx_xpm_file_to_image(vars->mlx, "sprites/corner_down_right.xpm", &img_width, &img_height);
+	if (!img->corner_down_right)
+	{
+	    ft_printf("corner_down_right failed\n");
+		close_window(vars);
+		//freee(img, vars, lay);
+	    return (1);
+	}
+
+	img->wall_up = mlx_xpm_file_to_image(vars->mlx, "sprites/wall_up.xpm", &img_width, &img_height);
+	if (!img->wall_up)
+	{
+	    ft_printf("wall_up failed\n");
+		close_window(vars);
+		//freee(img, vars, lay);
+	    return (1);
+	}
+
+	
+
+	img->wall_down = mlx_xpm_file_to_image(vars->mlx, "sprites/wall_down.xpm", &img_width, &img_height);
+	if (!img->wall_down)
+	{
+	    ft_printf("wall_down failed\n");
+		close_window(vars);
+		//freee(img, vars, lay);
+	    return (1);
+	}
+
+	img->wall_left = mlx_xpm_file_to_image(vars->mlx, "sprites/wall_left.xpm", &img_width, &img_height);
+	if (!img->wall_left)
+	{
+	    ft_printf("wall_left failed\n");
+		close_window(vars);
+		//freee(img, vars, lay);
+	    return (1);
+	}
+
+	img->wall_right = mlx_xpm_file_to_image(vars->mlx, "sprites/wall_right.xpm", &img_width, &img_height);
+	if (!img->wall_right)
+	{
+	    ft_printf("wall_right failed\n");
 		close_window(vars);
 		//freee(img, vars, lay);
 	    return (1);
