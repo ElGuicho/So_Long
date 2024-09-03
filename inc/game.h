@@ -6,7 +6,7 @@
 /*   By: gmunoz <gmunoz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/08 15:13:11 by gmunoz            #+#    #+#             */
-/*   Updated: 2024/08/22 18:10:14 by gmunoz           ###   ########.fr       */
+/*   Updated: 2024/09/03 18:31:57 by gmunoz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,8 +35,8 @@ typedef struct	s_map {
 }				t_map;
 
 typedef struct	s_data {
-	void	*img;
-	void	*img2;
+	void	*main_char;
+	void	*floor;
 	void	*corner_up_left;
 	void	*corner_up_right;
 	void	*corner_down_left;
@@ -45,12 +45,19 @@ typedef struct	s_data {
 	void	*wall_down;
 	void	*wall_left;
 	void	*wall_right;
+	void	*inner_wall;
+	void	*door_exit;
+	void	*coin;
 	char	*addr;
 	int		bits_per_pixel;
 	int		line_length;
 	int		endian;
 	int		x;
 	int		y;
+	int		up;
+	int		down;
+	int		left;
+	int		right;
 }				t_data;
 
 typedef struct	s_vars {

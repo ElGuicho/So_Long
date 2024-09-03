@@ -6,7 +6,7 @@
 /*   By: gmunoz <gmunoz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/14 15:50:46 by gmunoz            #+#    #+#             */
-/*   Updated: 2024/08/22 19:06:47 by gmunoz           ###   ########.fr       */
+/*   Updated: 2024/09/03 18:59:12 by gmunoz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,15 @@ int close_window(t_vars *vars)
     return (0);
 }
 
+void	endgame(t_vars *vars)
+{
+	mlx_clear_window(vars->mlx, vars->win);
+	mlx_string_put(vars->mlx, vars->win, 100, 100, 0x00FF0000, "You won!");
+	sleep(2);
+	close_window(vars);
+	exit(0);
+}
+
 int	key_hook(int keycode, t_vars *vars)
 {
 /* 	ft_printf("x = %d\n", vars->img->x);
@@ -44,11 +53,18 @@ int	key_hook(int keycode, t_vars *vars)
 	lay = vars->lay; */
 	if (keycode == 119)
 	{
-		if (vars->img->y > 64)
+		if (vars->img->y > 64 && vars->lay->map[vars->img->y / 64 - 1][vars->img->x / 64] != '1')
 		{
 			//ft_printf("n_row = %d\n", vars->lay->n_row);
-			mlx_put_image_to_window(vars->mlx, vars->win, vars->img->img2, vars->img->x, vars->img->y);
+			mlx_put_image_to_window(vars->mlx, vars->win, vars->img->floor, vars->img->x, vars->img->y);
 			vars->img->y -= 64;
+			if (vars->lay->map[vars->img->y / 64][vars->img->x / 64] == 'C')
+			{
+				vars->lay->collect--;
+				vars->lay->map[vars->img->y / 64][vars->img->x / 64] = '0';	
+			}
+			if (vars->lay->map[vars->img->y / 64][vars->img->x / 64] == 'E' && vars->lay->collect == 0)
+				endgame(vars);
 			//mlx_put_image_to_window(vars->mlx, vars->win, vars->img->img, vars->img->x, vars->img->y);
 			vars->steps++;
 			ft_printf("number of steps = %d\n", vars->steps);
@@ -57,9 +73,16 @@ int	key_hook(int keycode, t_vars *vars)
 	}
 	if (keycode == 97)
 	{
-		if (vars->img->x > 64)
+		if (vars->img->x > 64 && vars->lay->map[vars->img->y / 64][vars->img->x / 64 - 1] != '1')
 		{
-			mlx_put_image_to_window(vars->mlx, vars->win, vars->img->img2, vars->img->x, vars->img->y);
+			if (vars->lay->map[vars->img->y / 64][vars->img->x / 64] == 'C')
+			{
+				vars->lay->collect--;
+				vars->lay->map[vars->img->y / 64][vars->img->x / 64] = '0';	
+			}
+			if (vars->lay->map[vars->img->y / 64][vars->img->x / 64] == 'E' && vars->lay->collect == 0)
+				endgame(vars);
+			mlx_put_image_to_window(vars->mlx, vars->win, vars->img->floor, vars->img->x, vars->img->y);
 			vars->img->x -= 64;	
 			//mlx_put_image_to_window(vars->mlx, vars->win, vars->img->img, vars->img->x, vars->img->y);
 			vars->steps++;
@@ -70,9 +93,16 @@ int	key_hook(int keycode, t_vars *vars)
 	if (keycode == 115)
 	{
 		//ft_printf("n_row = %d\n", vars->lay->n_row);
-		if (vars->img->y < (vars->lay->n_row * 64) - 128)
+		if (vars->img->y < (vars->lay->n_row * 64) - 128 && vars->lay->map[vars->img->y / 64 + 1][vars->img->x / 64] != '1')
 		{
-			mlx_put_image_to_window(vars->mlx, vars->win, vars->img->img2, vars->img->x, vars->img->y);
+			if (vars->lay->map[vars->img->y / 64][vars->img->x / 64] == 'C')
+			{
+				vars->lay->collect--;
+				vars->lay->map[vars->img->y / 64][vars->img->x / 64] = '0';	
+			}
+			if (vars->lay->map[vars->img->y / 64][vars->img->x / 64] == 'E' && vars->lay->collect == 0)
+				endgame(vars);
+			mlx_put_image_to_window(vars->mlx, vars->win, vars->img->floor, vars->img->x, vars->img->y);
 			vars->img->y += 64;	
 			//mlx_put_image_to_window(vars->mlx, vars->win, vars->img->img, vars->img->x, vars->img->y);
 			vars->steps++;
@@ -82,9 +112,16 @@ int	key_hook(int keycode, t_vars *vars)
 	}
 	if (keycode == 100)
 	{
-		if (vars->img->x < (vars->lay->n_col * 64) - 128)
+		if (vars->img->x < (vars->lay->n_col * 64) - 128 && vars->lay->map[vars->img->y / 64][vars->img->x / 64 + 1] != '1')
 		{
-			mlx_put_image_to_window(vars->mlx, vars->win, vars->img->img2, vars->img->x, vars->img->y);
+			if (vars->lay->map[vars->img->y / 64][vars->img->x / 64] == 'C')
+			{
+				vars->lay->collect--;
+				vars->lay->map[vars->img->y / 64][vars->img->x / 64] = '0';	
+			}
+			if (vars->lay->map[vars->img->y / 64][vars->img->x / 64] == 'E' && vars->lay->collect == 0)
+				endgame(vars);
+			mlx_put_image_to_window(vars->mlx, vars->win, vars->img->floor, vars->img->x, vars->img->y);
 			vars->img->x += 64;	
 			//mlx_put_image_to_window(vars->mlx, vars->win, vars->img->img, vars->img->x, vars->img->y);
 			vars->steps++;
@@ -97,48 +134,8 @@ int	key_hook(int keycode, t_vars *vars)
 
 int	render_next_frame(t_vars *vars)
 {
-	int i;
-	int j;
-
-	i = 1;
-	mlx_put_image_to_window(vars->mlx, vars->win, vars->img->corner_up_left, 0, 0);
-	mlx_put_image_to_window(vars->mlx, vars->win, vars->img->corner_up_right, (vars->lay->n_col - 1) * 64, 0);
-	mlx_put_image_to_window(vars->mlx, vars->win, vars->img->corner_down_left, 0, (vars->lay->n_row - 1) * 64);
-	mlx_put_image_to_window(vars->mlx, vars->win, vars->img->corner_down_right, (vars->lay->n_col - 1) * 64, (vars->lay->n_row - 1) * 64);
-	while (i < vars->lay->n_col - 1)
-	{
-		mlx_put_image_to_window(vars->mlx, vars->win, vars->img->wall_up, i * 64, 0);
-		mlx_put_image_to_window(vars->mlx, vars->win, vars->img->wall_down, i * 64, (vars->lay->n_row - 1) * 64);
-		i++;
-	}
-	i = 1;
-	while (i < vars->lay->n_row - 1)
-	{
-		mlx_put_image_to_window(vars->mlx, vars->win, vars->img->wall_left, 0, i * 64);
-		mlx_put_image_to_window(vars->mlx, vars->win, vars->img->wall_right, (vars->lay->n_col - 1) * 64, i * 64);
-		i++;
-	}
-	i = 1;
-	j = 1;
-	while (j < vars->lay->n_row - 1)
-	{
-		while (i < vars->lay->n_col - 1)
-		{
-			/* if (vars->lay->map[j][i] == 'C')
-				mlx_put_image_to_window(vars->mlx, vars->win, vars->img->, i * 64, j * 64);
-			if (vars->lay->map[j][i] == 'E')
-				mlx_put_image_to_window(vars->mlx, vars->win, vars->img->, i * 64, j * 64); */
-			if (vars->lay->map[j][i] == '1')
-				mlx_put_image_to_window(vars->mlx, vars->win, vars->img->wall_up, i * 64, j * 64);
-			else
-				mlx_put_image_to_window(vars->mlx, vars->win, vars->img->img2, i * 64, j * 64);
-			i++;
-			if (vars->lay->map[j][i] == 'P')
-				mlx_put_image_to_window(vars->mlx, vars->win, vars->img->img, i * 64, j * 64);
-		}
-		i = 1;
-		j++;
-	}
-	//mlx_put_image_to_window(vars->mlx, vars->win, vars->img->img, vars->img->x, vars->img->y);
+/* 	printf("vars->img->x = %d\n", vars->img->x);
+	printf("vars->img->y = %d\n", vars->img->y); */
+	mlx_put_image_to_window(vars->mlx, vars->win, vars->img->main_char, vars->img->x, vars->img->y);
 	return (0);
 }

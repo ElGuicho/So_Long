@@ -6,7 +6,7 @@
 /*   By: gmunoz <gmunoz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/19 15:48:40 by gmunoz            #+#    #+#             */
-/*   Updated: 2024/08/22 18:18:06 by gmunoz           ###   ########.fr       */
+/*   Updated: 2024/09/03 18:50:38 by gmunoz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,10 +32,10 @@ void	freee(t_data *img, t_vars *vars, t_map *lay)
 	}
 	if (img)
 	{
-		if (img->img)
-			free(img->img);
-		if (img->img2)
-			free(img->img2);
+		if (img->main_char)
+			free(img->main_char);
+		if (img->floor)
+			free(img->floor);
 		if (img->addr)
 			free(img->addr);
 		free(img);
@@ -203,6 +203,56 @@ char	**map_check(int argc, char const **argv, t_map *lay)
 	return (map);
 }
 
+void put_sprites(t_vars *vars)
+{
+	int i;
+	int j;
+
+	i = 1;
+	mlx_put_image_to_window(vars->mlx, vars->win, vars->img->corner_up_left, 0, 0);
+	mlx_put_image_to_window(vars->mlx, vars->win, vars->img->corner_up_right, (vars->lay->n_col - 1) * 64, 0);
+	mlx_put_image_to_window(vars->mlx, vars->win, vars->img->corner_down_left, 0, (vars->lay->n_row - 1) * 64);
+	mlx_put_image_to_window(vars->mlx, vars->win, vars->img->corner_down_right, (vars->lay->n_col - 1) * 64, (vars->lay->n_row - 1) * 64);
+	while (i < vars->lay->n_col - 1)
+	{
+		mlx_put_image_to_window(vars->mlx, vars->win, vars->img->wall_up, i * 64, 0);
+		mlx_put_image_to_window(vars->mlx, vars->win, vars->img->wall_down, i * 64, (vars->lay->n_row - 1) * 64);
+		i++;
+	}
+	i = 1;
+	while (i < vars->lay->n_row - 1)
+	{
+		mlx_put_image_to_window(vars->mlx, vars->win, vars->img->wall_left, 0, i * 64);
+		mlx_put_image_to_window(vars->mlx, vars->win, vars->img->wall_right, (vars->lay->n_col - 1) * 64, i * 64);
+		i++;
+	}
+	i = 1;
+	j = 1;
+	while (j < vars->lay->n_row - 1)
+	{
+		while (i < vars->lay->n_col - 1)
+		{
+			if (vars->lay->map[j][i] == 'C')
+				mlx_put_image_to_window(vars->mlx, vars->win, vars->img->coin, i * 64, j * 64);
+			else if (vars->lay->map[j][i] == 'E')
+				mlx_put_image_to_window(vars->mlx, vars->win, vars->img->door_exit, i * 64, j * 64);
+			else if (vars->lay->map[j][i] == '1')
+				mlx_put_image_to_window(vars->mlx, vars->win, vars->img->inner_wall, i * 64, j * 64);
+			else if (vars->lay->map[j][i] == 'P')
+			{
+				mlx_put_image_to_window(vars->mlx, vars->win, vars->img->main_char, i * 64, j * 64);
+				vars->img->x = i * 64;
+				vars->img->y = j * 64;
+			}
+			else
+				mlx_put_image_to_window(vars->mlx, vars->win, vars->img->floor, i * 64, j * 64);
+			i++;
+		}
+		i = 1;
+		j++;
+	}
+}
+
 int main(int argc, char const **argv)
 {
 	t_data	*img;
@@ -298,9 +348,8 @@ int main(int argc, char const **argv)
 		return (0);
 	}
 	//mlx_do_sync(vars->mlx);
-	mlx_key_hook(vars->win, key_hook, vars);
-	img->img = mlx_xpm_file_to_image(vars->mlx, relative_path, &img_width, &img_height);
-	if (!img->img)
+	img->main_char = mlx_xpm_file_to_image(vars->mlx, relative_path, &img_width, &img_height);
+	if (!img->main_char)
 	{
 	    ft_printf("mlx_xpm_file_to_image failed\n");
 		close_window(vars);
@@ -308,8 +357,8 @@ int main(int argc, char const **argv)
 	    return (1);
 	}
 
-	img->img2 = mlx_xpm_file_to_image(vars->mlx, relative_path2, &img_width, &img_height);
-	if (!img->img2)
+	img->floor = mlx_xpm_file_to_image(vars->mlx, relative_path2, &img_width, &img_height);
+	if (!img->floor)
 	{
 	    ft_printf("mlx_xpm_file_to_image2 failed\n");
 		close_window(vars);
@@ -391,7 +440,34 @@ int main(int argc, char const **argv)
 	    return (1);
 	}
 
-	img->addr = mlx_get_data_addr(img->img, &img->bits_per_pixel, &img->line_length, &img->endian);
+	img->inner_wall = mlx_xpm_file_to_image(vars->mlx, "sprites/inner_wall.xpm", &img_width, &img_height);
+	if (!img->inner_wall)
+	{
+	    ft_printf("inner_wall failed\n");
+		close_window(vars);
+		//freee(img, vars, lay);
+	    return (1);
+	}
+
+	img->door_exit = mlx_xpm_file_to_image(vars->mlx, "sprites/door_exit.xpm", &img_width, &img_height);
+	if (!img->door_exit)
+	{
+	    ft_printf("door_exit failed\n");
+		close_window(vars);
+		//freee(img, vars, lay);
+	    return (1);
+	}
+
+	img->coin = mlx_xpm_file_to_image(vars->mlx, "sprites/collect.xpm", &img_width, &img_height);
+	if (!img->coin)
+	{
+	    ft_printf("coin failed\n");
+		close_window(vars);
+		//freee(img, vars, lay);
+	    return (1);
+	}
+
+	img->addr = mlx_get_data_addr(img->main_char, &img->bits_per_pixel, &img->line_length, &img->endian);
 	if (!img->addr)
 	{
 		ft_printf("mlx_get_data_addr failed\n");
@@ -399,17 +475,19 @@ int main(int argc, char const **argv)
 		//freee(img, vars, lay);
 	    return (1);
 	}
-	//mlx_put_image_to_window(vars->mlx, vars->win, img->img, img->x, img->y);
+	//mlx_put_image_to_window(vars->mlx, vars->win, img->main_char, img->x, img->y);
 	vars->img = img;
 	//mlx_do_sync(vars->mlx);
+	put_sprites(vars);
+	mlx_key_hook(vars->win, key_hook, vars);
 	mlx_loop_hook(vars->mlx, render_next_frame, vars);
 	mlx_loop(vars->mlx);
-	//freee(img, vars, lay);
+	mlx_destroy_window(vars->mlx, vars->win);
 	return 0;
 }
 
 /* 
-img->img = mlx_new_image(mlx, 1920, 1080);
+img->main_char = mlx_new_image(mlx, 1920, 1080);
 ft_mlx_pixel_put(&img, 5, 5, 0x00FF0000);
 
 void	ft_mlx_pixel_put(t_data *data, int x, int y, int color)
