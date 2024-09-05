@@ -6,7 +6,7 @@
 /*   By: gmunoz <gmunoz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/19 15:48:40 by gmunoz            #+#    #+#             */
-/*   Updated: 2024/09/03 18:50:38 by gmunoz           ###   ########.fr       */
+/*   Updated: 2024/09/05 13:57:43 by gmunoz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,25 +141,23 @@ char	*check_char(char *line, t_map *lay, int i, char *map)
 
 char	**sort_map(char const *argv, t_map *lay)
 {
-	int		fd;
 	int		i;
 	char	*line;
 	char	*map;
 
 	map = NULL;
-	fd = open(argv, O_RDONLY);
-	if (fd == -1)
+	lay->map_fd = open(argv, O_RDONLY);
+	if (lay->map_fd == -1)
 	{
 		ft_printf("open failed\n");
 		return (NULL);
 	}
-	line = get_next_line(fd);
+	line = get_next_line(lay->map_fd);
 	if (!line)
 	{
 		ft_printf("get_next_line failed\n");
 		return (NULL);
 	}
-	
 	while (1)
 	{
 		i = 0;
@@ -171,7 +169,7 @@ char	**sort_map(char const *argv, t_map *lay)
 		if (map_err(line, lay, i) == 2)
 			break ;
 		free(line);
-		line = get_next_line(fd);
+		line = get_next_line(lay->map_fd);
 		if (!line)
 		{
 			ft_printf("get_next_line failed\n");
@@ -179,7 +177,6 @@ char	**sort_map(char const *argv, t_map *lay)
 		}
 	}
 	free(line);
-	close(fd);
 	return (ft_split(map, '\n'));
 }
 
@@ -199,7 +196,11 @@ char	**map_check(int argc, char const **argv, t_map *lay)
 	}
 	map = sort_map(argv[1], lay);
 	if (map == NULL)
+	{
+		close(lay->map_fd);
 		return (NULL);
+	}
+	close(lay->map_fd);
 	return (map);
 }
 
@@ -462,6 +463,15 @@ int main(int argc, char const **argv)
 	if (!img->coin)
 	{
 	    ft_printf("coin failed\n");
+		close_window(vars);
+		//freee(img, vars, lay);
+	    return (1);
+	}
+
+	img->char_in_door = mlx_xpm_file_to_image(vars->mlx, "sprites/char_in_door.xpm", &img_width, &img_height);
+	if (!img->char_in_door)
+	{
+	    ft_printf("char_in_door failed\n");
 		close_window(vars);
 		//freee(img, vars, lay);
 	    return (1);

@@ -6,7 +6,7 @@
 /*   By: gmunoz <gmunoz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/08 15:13:11 by gmunoz            #+#    #+#             */
-/*   Updated: 2024/09/03 18:31:57 by gmunoz           ###   ########.fr       */
+/*   Updated: 2024/09/05 14:18:15 by gmunoz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ typedef struct	s_map {
 	int		collect;
 	int		exit;
 	char	**map;
+	int		map_fd;
 }				t_map;
 
 typedef struct	s_data {
@@ -47,6 +48,7 @@ typedef struct	s_data {
 	void	*wall_right;
 	void	*inner_wall;
 	void	*door_exit;
+	void	*char_in_door;
 	void	*coin;
 	char	*addr;
 	int		bits_per_pixel;
@@ -69,9 +71,14 @@ typedef struct	s_vars {
 	t_map	*lay;
 }				t_vars;
 
-int	close_win(int keycode, t_vars *vars);
-int	close_window(t_vars *vars);
-int	key_hook(int keycode, t_vars *vars);
-int	render_next_frame(t_vars *vars);
+int		close_win(int keycode, t_vars *vars);
+int		close_window(t_vars *vars);
+int		key_hook(int keycode, t_vars *vars);
+int		render_next_frame(t_vars *vars);
+void	move_up(t_vars *vars);
+void	move_left(t_vars *vars);
+void	move_down(t_vars *vars);
+void	move_right(t_vars *vars);
+void	endgame(t_vars *vars);
 
 #endif
