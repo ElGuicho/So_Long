@@ -6,7 +6,7 @@
 /*   By: gmunoz <gmunoz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 16:29:46 by gmunoz            #+#    #+#             */
-/*   Updated: 2024/09/05 20:01:49 by gmunoz           ###   ########.fr       */
+/*   Updated: 2024/09/10 18:01:41 by gmunoz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,19 +20,16 @@ int	map_err(char *line, t_map *lay, int i)
 		{
 			if (line[i] != '1')
 			{
-				ft_printf("map is not closed\n");
+				ft_printf("Error\nMap is not closed\n");
 				return (0);
 			}
 			i++;
 		}
 		if (lay->n_col == gnl_strlen(line))
-		{
-			ft_printf("map is read\n");
 			return (2);
-		}
 		else
 		{
-			ft_printf("map is not rectangular\n");
+			ft_printf("Error\nMap is not rectangular\n");
 			return (0);
 		}
 	}
@@ -46,7 +43,7 @@ int	map_err(char *line, t_map *lay, int i)
 			{
 				if (line[gnl_strlen(line) - 1] == '\n')
 					break ;
-				ft_printf("map is not closed\n");
+				ft_printf("Error\nMap is not closed\n");
 				return (0);
 			}
 			i++;
@@ -55,12 +52,12 @@ int	map_err(char *line, t_map *lay, int i)
 	else if (line[0] != '1' || (line[gnl_strlen(line) - 2] != '1' &&
 		line[gnl_strlen(line) - 1] != '\n'))
 	{
-		ft_printf("map is not closed\n");
+		ft_printf("Error\nMap is not closed\n");
 		return (0);
 	}
 	if (lay->n_col != gnl_strlen(line) - 1)
 	{
-		ft_printf("map is not rectangular\n");
+		ft_printf("Error\nMap is not rectangular\n");
 		return (0);
 	}
 	return (1);
@@ -86,12 +83,11 @@ char	*check_char(char *line, t_map *lay, int i, char *map)
 	}
 	lay->n_row++;
 	tmp = gnl_strjoin(map, line);
+	map = NULL;
 	if (!tmp)
-	{
-		ft_printf("gnl_strjoin failed\n");
 		return (NULL);
-	}
-	return (tmp);
+	map = tmp;
+	return (map);
 }
 
 char	**sort_map(char const *argv, t_map *lay)
@@ -99,6 +95,7 @@ char	**sort_map(char const *argv, t_map *lay)
 	int		i;
 	char	*line;
 	char	*map;
+	char	**real_map;
 
 	map = NULL;
 	lay->map_fd = open(argv, O_RDONLY);
@@ -120,7 +117,9 @@ char	**sort_map(char const *argv, t_map *lay)
 		free(line);
 	}
 	free(line);
-	return (ft_split(map, '\n'));
+	real_map = ft_split(map, '\n');
+	free(map);
+	return (real_map);
 }
 
 char	**map_check(int argc, char const **argv, t_map *lay)
@@ -129,12 +128,12 @@ char	**map_check(int argc, char const **argv, t_map *lay)
 	
 	if (argc != 2)
 	{
-		ft_printf("wrong number of arguments\n");
+		ft_printf("Error\nProgram only needs 1 exra argument\n");
 		return (NULL);
 	}
 	if (ft_strnstr(argv[1], ".ber", gnl_strlen(argv[1])) == NULL)
 	{
-		ft_printf("wrong file extension\n");
+		ft_printf("Error\nWrong file extension: needs to be \".ber\"\n");
 		return (NULL);
 	}
 	map = sort_map(argv[1], lay);
@@ -151,17 +150,12 @@ int	create_map(int argc, const char **argv, t_map *lay)
 {
 	lay->map = map_check(argc, argv, lay);
 	if (lay->map == NULL)
-	{
-		ft_printf("map_check failed\n");
 		return (1);
-	}
 	if (lay->player == 0 || lay->collect == 0 || lay->exit == 0 ||
 		lay->n_row < 3 || lay->n_col < 5)
 	{
-		ft_printf("map is invalid\n");
+		ft_printf("Error\nThe map is invalid\n");
 		return (1);
 	}
-	else
-		ft_printf("map is read and valid\n");
 	return (0);
 }

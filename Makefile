@@ -6,7 +6,7 @@
 #    By: gmunoz <gmunoz@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/06/19 16:48:58 by gmunoz            #+#    #+#              #
-#    Updated: 2024/09/05 16:30:39 by gmunoz           ###   ########.fr        #
+#    Updated: 2024/09/10 15:25:49 by gmunoz           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -57,7 +57,7 @@ MLX_FLAGS   = -Lmlx_linux -lmlx_Linux -L/usr/lib -Imlx_linux -lXext -lX11 -lm -l
 
 # Source files
 SRC = src/main.c src/mlx_funct.c src/char_moveset.c src/init_code.c \
-src/draw_world.c src/map_checker.c \
+src/draw_world.c src/map_checker.c src/erase_world.c \
 gnl/get_next_line.c gnl/get_next_line_utils.c
 
 # Object files

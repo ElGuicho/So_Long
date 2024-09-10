@@ -6,7 +6,7 @@
 /*   By: gmunoz <gmunoz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/08 15:13:11 by gmunoz            #+#    #+#             */
-/*   Updated: 2024/09/05 16:30:57 by gmunoz           ###   ########.fr       */
+/*   Updated: 2024/09/10 16:21:10 by gmunoz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,9 +82,10 @@ void	move_right(t_vars *vars);
 void	endgame(t_vars *vars);
 void	init_vars(t_vars *vars, t_map *lay, t_data *img);
 int		init_mlx(t_vars *vars, t_map *lay);
-int		init_imgs(t_vars *vars, t_data *img);
+void	init_imgs(t_vars *vars, t_data *img);
 int		img_err(t_vars *vars, void **img_ptr, char *img_name);
 void	put_sprites(t_vars *vars);
 int		create_map(int argc, const char **argv, t_map *lay);
+void	freee(t_data *img, t_vars *vars, t_map *lay);
 
 #endif
