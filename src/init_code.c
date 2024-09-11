@@ -6,7 +6,7 @@
 /*   By: gmunoz <gmunoz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:15:10 by gmunoz            #+#    #+#             */
-/*   Updated: 2024/09/10 17:46:15 by gmunoz           ###   ########.fr       */
+/*   Updated: 2024/09/11 18:04:39 by gmunoz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,10 @@ void	init_vars(t_vars *vars, t_map *lay, t_data *img)
 	lay->player = 0;
 	lay->n_row = 0;
 	lay->map = NULL;
+	lay->path_up = 0;
+	lay->path_down = 0;
+	lay->path_left = 0;
+	lay->path_right = 0;
 	vars->mlx = NULL;
 }
 

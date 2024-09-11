@@ -6,7 +6,7 @@
 /*   By: gmunoz <gmunoz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/08 15:13:11 by gmunoz            #+#    #+#             */
-/*   Updated: 2024/09/10 16:21:10 by gmunoz           ###   ########.fr       */
+/*   Updated: 2024/09/11 19:30:36 by gmunoz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,11 @@ typedef struct	s_map {
 	int		player_y;
 	int		collect;
 	int		exit;
+	int		path_nb;
+	int		path_up;
+	int		path_down;
+	int		path_left;
+	int		path_right;
 	char	**map;
 	int		map_fd;
 }				t_map;
@@ -87,5 +92,6 @@ int		img_err(t_vars *vars, void **img_ptr, char *img_name);
 void	put_sprites(t_vars *vars);
 int		create_map(int argc, const char **argv, t_map *lay);
 void	freee(t_data *img, t_vars *vars, t_map *lay);
+int		check_path(t_map *lay);
 
 #endif
