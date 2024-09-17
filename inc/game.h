@@ -6,7 +6,7 @@
 /*   By: gmunoz <gmunoz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/08 15:13:11 by gmunoz            #+#    #+#             */
-/*   Updated: 2024/09/11 19:30:36 by gmunoz           ###   ########.fr       */
+/*   Updated: 2024/09/17 19:06:06 by gmunoz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,15 +27,20 @@ typedef struct	s_map {
 	int		n_col;
 	int		n_row;
 	int		player;
+	int		player_cp;
 	int		player_x;
 	int		player_y;
 	int		collect;
+	int		collect_cp;
 	int		exit;
+	int		exit_cp;
 	int		path_nb;
 	int		path_up;
 	int		path_down;
 	int		path_left;
 	int		path_right;
+	int		init_x;
+	int		init_y;
 	char	**map;
 	int		map_fd;
 }				t_map;

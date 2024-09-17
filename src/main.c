@@ -6,7 +6,7 @@
 /*   By: gmunoz <gmunoz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/19 15:48:40 by gmunoz            #+#    #+#             */
-/*   Updated: 2024/09/11 19:27:14 by gmunoz           ###   ########.fr       */
+/*   Updated: 2024/09/17 19:03:23 by gmunoz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,11 +42,11 @@ int main(int argc, char const **argv)
 		freee(img, vars, lay);
 		return (1);
 	}
-	/* if (check_path(lay) == 1)
+	if (check_path(lay) == 1)
 	{
 		freee(img, vars, lay);
 		return (1);
-	} */
+	}
 	if (init_mlx(vars, lay) == 1)
 	{
 		freee(img, vars, lay);
