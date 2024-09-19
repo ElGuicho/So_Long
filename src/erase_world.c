@@ -6,7 +6,7 @@
 /*   By: gmunoz <gmunoz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 15:24:52 by gmunoz            #+#    #+#             */
-/*   Updated: 2024/09/10 17:45:09 by gmunoz           ###   ########.fr       */
+/*   Updated: 2024/09/19 18:50:10 by gmunoz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,33 +42,20 @@ void	freee(t_data *img, t_vars *vars, t_map *lay)
 
 void	image_free(t_vars *vars)
 {
-	if (vars->img->main_char)
+		//doesnt need to check if the image exists?
 		mlx_destroy_image(vars->mlx, vars->img->main_char);
-	if (vars->img->floor)
 		mlx_destroy_image(vars->mlx, vars->img->floor);
-	if (vars->img->corner_up_left)
 		mlx_destroy_image(vars->mlx, vars->img->corner_up_left);
-	if (vars->img->corner_up_right)
 		mlx_destroy_image(vars->mlx, vars->img->corner_up_right);
-	if (vars->img->corner_down_left)
 		mlx_destroy_image(vars->mlx, vars->img->corner_down_left);
-	if (vars->img->corner_down_right)
 		mlx_destroy_image(vars->mlx, vars->img->corner_down_right);
-	if (vars->img->wall_up)
 		mlx_destroy_image(vars->mlx, vars->img->wall_up);
-	if (vars->img->wall_down)
 		mlx_destroy_image(vars->mlx, vars->img->wall_down);
-	if (vars->img->wall_left)
 		mlx_destroy_image(vars->mlx, vars->img->wall_left);
-	if (vars->img->wall_right)
 		mlx_destroy_image(vars->mlx, vars->img->wall_right);
-	if (vars->img->inner_wall)
 		mlx_destroy_image(vars->mlx, vars->img->inner_wall);
-	if (vars->img->door_exit)
 		mlx_destroy_image(vars->mlx, vars->img->door_exit);
-	if (vars->img->char_in_door)
 		mlx_destroy_image(vars->mlx, vars->img->char_in_door);
-	if (vars->img->coin)
 		mlx_destroy_image(vars->mlx, vars->img->coin);
 }
 
@@ -97,7 +84,7 @@ int	close_window(t_vars *vars)
 
 void	endgame(t_vars *vars)
 {
-	ft_printf("You win!\n");
+	ft_printf("%sYou win!%s\n", GREEN, DEFAULT);
 	sleep(1);
 	close_window(vars);
 	exit(0);

@@ -6,7 +6,7 @@
 /*   By: gmunoz <gmunoz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 16:29:46 by gmunoz            #+#    #+#             */
-/*   Updated: 2024/09/11 18:18:25 by gmunoz           ###   ########.fr       */
+/*   Updated: 2024/09/19 17:57:20 by gmunoz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,7 +144,7 @@ char	**map_check(int argc, char const **argv, t_map *lay)
 	
 	if (argc != 2)
 	{
-		ft_printf("Error\nProgram only needs 1 exra argument\n");
+		ft_printf("Error\nProgram only needs 1 extra argument\n");
 		return (NULL);
 	}
 	if (ft_strnstr(argv[1], ".ber", gnl_strlen(argv[1])) == NULL)
