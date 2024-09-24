@@ -6,7 +6,7 @@
 /*   By: gmunoz <gmunoz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 14:15:21 by gmunoz            #+#    #+#             */
-/*   Updated: 2024/09/19 18:37:43 by gmunoz           ###   ########.fr       */
+/*   Updated: 2024/09/24 18:08:20 by gmunoz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,60 +14,88 @@
 
 void	check_position(t_vars *vars)
 {
-	if (vars->lay->map[vars->img->y / 64][vars->img->x / 64] == 'C')
+	int	x;
+	int	y;
+
+	x = vars->img->x;
+	y = vars->img->y;
+	if (vars->lay->map[y / 64][x / 64] == 'C')
 	{
 		vars->lay->collect--;
-		vars->lay->map[vars->img->y / 64][vars->img->x / 64] = '0';
+		vars->lay->map[y / 64][x / 64] = '0';
 	}
-	if (vars->lay->map[vars->img->y / 64][vars->img->x / 64] == 'E' && vars->lay->collect == 0)
+	if (vars->lay->map[y / 64][x / 64] == 'E' && vars->lay->collect == 0)
 		endgame(vars);
 }
 
 void	move_up(t_vars *vars)
 {
-	//ft_printf("n_row = %d\n", vars->lay->n_row);
-	mlx_put_image_to_window(vars->mlx, vars->win, vars->img->floor, vars->img->x, vars->img->y);
+	int		x;
+	int		y;
+	void	*door_exit;
+
+	x = vars->img->x;
+	y = vars->img->y;
+	door_exit = vars->img->door_exit;
+	mlx_put_image_to_window(vars->mlx, vars->win, vars->img->floor, x, y);
 	vars->img->y -= 64;
 	check_position(vars);
-	if (vars->lay->map[vars->img->y / 64 + 1][vars->img->x / 64] == 'E' && vars->lay->collect != 0)
-		mlx_put_image_to_window(vars->mlx, vars->win, vars->img->door_exit, vars->img->x, vars->img->y + 64);
-	//mlx_put_image_to_window(vars->mlx, vars->win, vars->img->img, vars->img->x, vars->img->y);
+	if (vars->lay->map[y / 64 + 1][x / 64] == 'E' && vars->lay->collect != 0)
+		mlx_put_image_to_window(vars->mlx, vars->win, door_exit, x, y + 64);
 	vars->steps++;
 	ft_printf("number of steps = %d\n", vars->steps);
 }
 
 void	move_left(t_vars *vars)
 {
-	mlx_put_image_to_window(vars->mlx, vars->win, vars->img->floor, vars->img->x, vars->img->y);
-	vars->img->x -= 64;	
+	int		x;
+	int		y;
+	void	*door_exit;
+
+	x = vars->img->x;
+	y = vars->img->y;
+	door_exit = vars->img->door_exit;
+	mlx_put_image_to_window(vars->mlx, vars->win, vars->img->floor, x, y);
+	vars->img->x -= 64;
 	check_position(vars);
-	if (vars->lay->map[vars->img->y / 64][vars->img->x / 64 + 1] == 'E' && vars->lay->collect != 0)
-		mlx_put_image_to_window(vars->mlx, vars->win, vars->img->door_exit, vars->img->x + 64, vars->img->y);
-	//mlx_put_image_to_window(vars->mlx, vars->win, vars->img->img, vars->img->x, vars->img->y);
+	if (vars->lay->map[y / 64][x / 64 + 1] == 'E' && vars->lay->collect != 0)
+		mlx_put_image_to_window(vars->mlx, vars->win, door_exit, x + 64, y);
 	vars->steps++;
 	ft_printf("number of steps = %d\n", vars->steps);
 }
 
 void	move_down(t_vars *vars)
 {
-	mlx_put_image_to_window(vars->mlx, vars->win, vars->img->floor, vars->img->x, vars->img->y);
-	vars->img->y += 64;	
+	int		x;
+	int		y;
+	void	*door_exit;
+
+	x = vars->img->x;
+	y = vars->img->y;
+	door_exit = vars->img->door_exit;
+	mlx_put_image_to_window(vars->mlx, vars->win, vars->img->floor, x, y);
+	vars->img->y += 64;
 	check_position(vars);
-	if (vars->lay->map[vars->img->y / 64 - 1][vars->img->x / 64] == 'E' && vars->lay->collect != 0)
-		mlx_put_image_to_window(vars->mlx, vars->win, vars->img->door_exit, vars->img->x, vars->img->y - 64);
-	//mlx_put_image_to_window(vars->mlx, vars->win, vars->img->img, vars->img->x, vars->img->y);
+	if (vars->lay->map[y / 64 - 1][x / 64] == 'E' && vars->lay->collect != 0)
+		mlx_put_image_to_window(vars->mlx, vars->win, door_exit, x, y - 64);
 	vars->steps++;
 	ft_printf("number of steps = %d\n", vars->steps);
 }
 
 void	move_right(t_vars *vars)
 {
-	mlx_put_image_to_window(vars->mlx, vars->win, vars->img->floor, vars->img->x, vars->img->y);
-	vars->img->x += 64;	
+	int		x;
+	int		y;
+	void	*door_exit;
+
+	x = vars->img->x;
+	y = vars->img->y;
+	door_exit = vars->img->door_exit;
+	mlx_put_image_to_window(vars->mlx, vars->win, vars->img->floor, x, y);
+	vars->img->x += 64;
 	check_position(vars);
-	if (vars->lay->map[vars->img->y / 64][vars->img->x / 64 - 1] == 'E' && vars->lay->collect != 0)
-		mlx_put_image_to_window(vars->mlx, vars->win, vars->img->door_exit, vars->img->x - 64, vars->img->y);
-	//mlx_put_image_to_window(vars->mlx, vars->win, vars->img->img, vars->img->x, vars->img->y);
+	if (vars->lay->map[y / 64][x / 64 - 1] == 'E' && vars->lay->collect != 0)
+		mlx_put_image_to_window(vars->mlx, vars->win, door_exit, x - 64, y);
 	vars->steps++;
 	ft_printf("number of steps = %d\n", vars->steps);
 }

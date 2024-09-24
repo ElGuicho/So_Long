@@ -6,7 +6,7 @@
 /*   By: gmunoz <gmunoz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/08 15:13:11 by gmunoz            #+#    #+#             */
-/*   Updated: 2024/09/17 19:06:06 by gmunoz           ###   ########.fr       */
+/*   Updated: 2024/09/24 18:18:21 by gmunoz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,8 @@
 # include <fcntl.h>
 # include <unistd.h>
 
-typedef struct	s_map {
+typedef struct s_map
+{
 	int		n_col;
 	int		n_row;
 	int		player;
@@ -45,7 +46,8 @@ typedef struct	s_map {
 	int		map_fd;
 }				t_map;
 
-typedef struct	s_data {
+typedef struct s_data
+{
 	void	*main_char;
 	void	*floor;
 	void	*corner_up_left;
@@ -72,7 +74,8 @@ typedef struct	s_data {
 	int		right;
 }				t_data;
 
-typedef struct	s_vars {
+typedef struct s_vars
+{
 	void	*mlx;
 	void	*win;
 	int		steps;
@@ -94,9 +97,14 @@ void	init_vars(t_vars *vars, t_map *lay, t_data *img);
 int		init_mlx(t_vars *vars, t_map *lay);
 void	init_imgs(t_vars *vars, t_data *img);
 int		img_err(t_vars *vars, void **img_ptr, char *img_name);
-void	put_sprites(t_vars *vars);
+void	put_sprites(t_vars *vars, t_map *lay, t_data *img);
 int		create_map(int argc, const char **argv, t_map *lay);
+int		map_err(char *line, t_map *lay, int i);
+char	*check_char(char *line, t_map *lay, int i, char *map);
 void	freee(t_data *img, t_vars *vars, t_map *lay);
 int		check_path(t_map *lay);
+int		path_loop(t_map *lay, char **map);
+void	check_interactibles(t_map *lay, int i, int j, char **map);
+void	map_free(char **map, int n_row);
 
 #endif

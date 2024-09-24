@@ -6,7 +6,7 @@
 /*   By: gmunoz <gmunoz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 17:31:17 by gmunoz            #+#    #+#             */
-/*   Updated: 2024/09/19 17:36:46 by gmunoz           ###   ########.fr       */
+/*   Updated: 2024/09/24 19:02:19 by gmunoz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,25 +30,23 @@ void	map_free(char **map, int n_row)
 void	check_interactibles(t_map *lay, int i, int j, char **map)
 {
 	lay->path_nb = 4;
-	if (map[i][j] == 'P')
-		lay->player_cp--;
-	else if (map[i][j] == 'C')
-		lay->collect_cp--;
-	else if (map[i][j] == 'E')
-		lay->exit_cp--;
-	if (map[i][j - 1] == '1' || map[i][j - 1] == '2' || map[i][j - 1] == '3' || map[i][j - 1] == '4')
+	if (map[i][j - 1] == '1' || map[i][j - 1] == '2'
+		|| map[i][j - 1] == '3' || map[i][j - 1] == '4')
 		lay->path_nb--;
 	else
 		lay->path_left = 1;
-	if (map[i][j + 1] == '1' || map[i][j + 1] == '2' || map[i][j + 1] == '3' || map[i][j + 1] == '4')
+	if (map[i][j + 1] == '1' || map[i][j + 1] == '2'
+		|| map[i][j + 1] == '3' || map[i][j + 1] == '4')
 		lay->path_nb--;
 	else
 		lay->path_right = 1;
-	if (map[i - 1][j] == '1' || map[i - 1][j] == '2' || map[i - 1][j] == '3' || map[i - 1][j] == '4')
+	if (map[i - 1][j] == '1' || map[i - 1][j] == '2'
+		|| map[i - 1][j] == '3' || map[i - 1][j] == '4')
 		lay->path_nb--;
 	else
 		lay->path_up = 1;
-	if (map[i + 1][j] == '1' || map[i + 1][j] == '2' || map[i + 1][j] == '3' || map[i + 1][j] == '4')
+	if (map[i + 1][j] == '1' || map[i + 1][j] == '2'
+		|| map[i + 1][j] == '3' || map[i + 1][j] == '4')
 		lay->path_nb--;
 	else
 		lay->path_down = 1;
@@ -110,6 +108,12 @@ int	path_loop(t_map *lay, char **map)
 {
 	while (lay->player_cp != 0 || lay->collect_cp != 0 || lay->exit_cp != 0)
 	{
+		if (map[lay->init_y][lay->init_x] == 'P')
+			lay->player_cp--;
+		else if (map[lay->init_y][lay->init_x] == 'C')
+			lay->collect_cp--;
+		else if (map[lay->init_y][lay->init_x] == 'E')
+			lay->exit_cp--;
 		check_interactibles(lay, lay->init_y, lay->init_x, map);
 		if (lay->path_nb > 0)
 			map = follow_path(lay, lay->init_y, lay->init_x, map);
@@ -118,80 +122,12 @@ int	path_loop(t_map *lay, char **map)
 			lay->path_nb = follow_path2(lay, lay->init_y, lay->init_x, map);
 			if (lay->path_nb > 1)
 				path_loop(lay, map);
-			else if (lay->player_cp != 0 || lay->collect_cp != 0 || lay->exit_cp != 0)
+			else if (lay->player_cp != 0 || lay->collect_cp != 0
+				|| lay->exit_cp != 0)
 				return (1);
 		}
 		if (!map)
 			return (1);
 	}
 	return (0);
-}
-
-int	check_path(t_map *lay)
-{
-	int	i;
-	int	j;
-	char	**map;
-
-	lay->collect_cp = lay->collect;
-	lay->exit_cp = lay->exit;
-	lay->player_cp = lay->player;
-	i = 0;
-	map = malloc(sizeof(char *) * lay->n_row);
-	if (!map)
-		return (1);
-	while (i < lay->n_row)
-	{
-		map[i] = NULL;
-		i++;
-	}
-	i = 0;
-	while (i < lay->n_row)
-	{
-		map[i] = ft_strdup(lay->map[i]);
-		if (!map[i])
-		{
-			map_free(map, i);
-			return (1);
-		}
-		i++;
-	}
-	i = 1;
-	while (i < lay->n_row - 1)
-	{
-		j = 1;
-		while (j < lay->n_col - 1)
-		{
-			if (map[i][j] != '1' && map[i][j] != '0')
-				break ;
-			j++;
-		}
-		if (map[i][j] != '1' && map[i][j] != '0')
-			break ;
-		i++;
-	}
-	lay->init_x = j;
-	lay->init_y = i;
-	check_interactibles(lay, i, j, map);
-	if (lay->path_nb == 0)
-	{
-		ft_printf("Error\nInteractible is closed by walls\n");
-		map_free(map, lay->n_row);
-		return (1);
-	}
-	if (map[i][j] == 'P')
-		lay->player_cp++;
-	else if (map[i][j] == 'C')
-		lay->collect_cp++;
-	else if (map[i][j] == 'E')
-		lay->exit_cp++;
-	if (path_loop(lay, map) == 1)
-	{
-		map_free(map, lay->n_row);
-		ft_printf("Error\nMap can't be completed\n");
-		return (1);
-	}
-	ft_printf("There is a viable path\n");
-	map_free(map, lay->n_row);
-	return (0);	
 }

@@ -6,133 +6,73 @@
 /*   By: gmunoz <gmunoz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 16:29:46 by gmunoz            #+#    #+#             */
-/*   Updated: 2024/09/19 17:57:20 by gmunoz           ###   ########.fr       */
+/*   Updated: 2024/09/24 18:53:09 by gmunoz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/game.h"
 
-int	map_err(char *line, t_map *lay, int i)
+char	*char_n_err(char *line, t_map *lay, char *map)
 {
-	if (line[gnl_strlen(line) - 1] != '\n' && line[gnl_strlen(line)] == '\0')
-	{
-		while (line[i] != '\0')
-		{
-			if (line[i] != '1')
-			{
-				ft_printf("Error\nMap is not closed\n");
-				return (0);
-			}
-			i++;
-		}
-		if (lay->n_col == gnl_strlen(line))
-			return (2);
-		else
-		{
-			ft_printf("Error\nMap is not rectangular\n");
-			return (0);
-		}
-	}
-	if (lay->n_row == 0)
-	{
-		i = 0;
-		lay->n_col = gnl_strlen(line) - 1;
-		while (i < gnl_strlen(line) - 1)
-		{
-			if (line[i] != '1')
-			{
-				if (line[gnl_strlen(line) - 1] == '\n' && line[i] == '\n')
-					break ;
-				ft_printf("Error\nMap is not closed\n");
-				return (0);
-			}
-			i++;
-		}
-	}
-	else if (line[0] != '1' || (line[gnl_strlen(line) - 2] != '1' ||
-		line[gnl_strlen(line) - 1] != '\n'))
-	{
-		ft_printf("Error\nMap is not closed\n");
-		return (0);
-	}
-	if (lay->n_col != gnl_strlen(line) - 1)
-	{
-		ft_printf("Error\nMap is not rectangular\n");
-		return (0);
-	}
-	return (1);
-}
-
-char	*check_char(char *line, t_map *lay, int i, char *map)
-{
-	char	*tmp;
-	
-	while (i < gnl_strlen(line))
-	{
-		if (line[i] == 'P')
-		{
-			lay->player_x = i;
-			lay->player_y = lay->n_row;
-			lay->player++;
-		}
-		if (line[i] == 'C')
-			lay->collect++;
-		if (line[i] == 'E')
-			lay->exit++;
-		i++;
-	}
-	lay->n_row++;
-	tmp = gnl_strjoin(map, line);
-	if (!tmp)
-		return (NULL);
-	return (tmp);
-}
-
-char	**sort_map(char const *argv, t_map *lay)
-{
-	int		i;
-	char	*line;
-	char	*map;
-	char	**real_map;
 	char	*temp_map;
 
-	map = NULL;
-	lay->map_fd = open(argv, O_RDONLY);
-	if (lay->map_fd == -1)
+	if (map_err(line, lay, 0) == 0)
+	{
+		if (map)
+			free(map);
 		return (NULL);
+	}
+	temp_map = map;
+	map = check_char(line, lay, 0, map);
+	if (map == NULL)
+	{
+		if (temp_map)
+			free(temp_map);
+		return (NULL);
+	}
+	return (map);
+}
+
+char	*map_loop(t_map *lay)
+{
+	char	*line;
+	char	*map;
+
+	map = NULL;
 	while (1)
 	{
 		line = get_next_line(lay->map_fd);
 		if (!line)
 		{
-			if (temp_map)
-				free(temp_map);
-			if (map)
-				free(map);
-			return (NULL);
-		}
-		i = 0;
-		if (map_err(line, lay, i) == 0)
-		{
 			if (map)
 				free(map);
 			return (free(line), NULL);
 		}
-		temp_map = map;
-		map = check_char(line, lay, i, map);
+		map = char_n_err(line, lay, map);
 		if (map == NULL)
-		{
-			if (temp_map)
-				free(temp_map);
 			return (free(line), NULL);
-		}
-		if (map_err(line, lay, i) == 2)
+		if (map_err(line, lay, 0) == 2)
 		{
 			free(line);
 			break ;
 		}
 		free(line);
 	}
+	return (map);
+}
+
+char	**sort_map(char const *map_file, t_map *lay)
+{
+	char	*map;
+	char	**real_map;
+
+	lay->map_fd = open(map_file, O_RDONLY);
+	if (lay->map_fd == -1)
+		return (NULL);
+	map = map_loop(lay);
+	close(lay->map_fd);
+	if (map == NULL)
+		return (NULL);
 	real_map = ft_split(map, '\n');
 	free(map);
 	return (real_map);
@@ -141,7 +81,7 @@ char	**sort_map(char const *argv, t_map *lay)
 char	**map_check(int argc, char const **argv, t_map *lay)
 {
 	char	**map;
-	
+
 	if (argc != 2)
 	{
 		ft_printf("Error\nProgram only needs 1 extra argument\n");
@@ -154,11 +94,7 @@ char	**map_check(int argc, char const **argv, t_map *lay)
 	}
 	map = sort_map(argv[1], lay);
 	if (map == NULL)
-	{
-		close(lay->map_fd);
 		return (NULL);
-	}
-	close(lay->map_fd);
 	return (map);
 }
 
@@ -167,9 +103,9 @@ int	create_map(int argc, const char **argv, t_map *lay)
 	lay->map = map_check(argc, argv, lay);
 	if (lay->map == NULL)
 		return (1);
-	if (lay->player == 0 || lay->player > 1 || lay->collect == 0 ||
-	lay->exit == 0 || lay->exit > 1 || (lay->n_row < 3 && lay->n_col < 5) ||
-	(lay->n_row < 5 && lay->n_col < 3))
+	if (lay->player == 0 || lay->player > 1 || lay->collect == 0
+		|| lay->exit == 0 || lay->exit > 1 || (lay->n_row < 3 && lay->n_col < 5)
+		|| (lay->n_row < 5 && lay->n_col < 3))
 	{
 		ft_printf("Error\nThe map is invalid\n");
 		return (1);
