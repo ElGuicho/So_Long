@@ -6,7 +6,7 @@
 /*   By: gmunoz <gmunoz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/08 15:13:11 by gmunoz            #+#    #+#             */
-/*   Updated: 2024/09/24 18:18:21 by gmunoz           ###   ########.fr       */
+/*   Updated: 2024/09/25 17:38:37 by gmunoz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,5 +106,6 @@ int		check_path(t_map *lay);
 int		path_loop(t_map *lay, char **map);
 void	check_interactibles(t_map *lay, int i, int j, char **map);
 void	map_free(char **map, int n_row);
+void	free_gnl(t_map *lay, char *line, char *map);
 
 #endif

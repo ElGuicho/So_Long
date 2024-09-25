@@ -6,11 +6,22 @@
 /*   By: gmunoz <gmunoz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 15:18:02 by gmunoz            #+#    #+#             */
-/*   Updated: 2024/09/24 18:51:32 by gmunoz           ###   ########.fr       */
+/*   Updated: 2024/09/25 17:38:53 by gmunoz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/game.h"
+
+void	free_gnl(t_map *lay, char *line, char *map)
+{
+	if (map)
+		free(map);
+	while (line != NULL)
+	{
+		free(line);
+		line = get_next_line(lay->map_fd);
+	}
+}
 
 int	last_line_err(char *line, t_map *lay, int i)
 {
