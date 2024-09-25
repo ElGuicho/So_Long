@@ -6,7 +6,7 @@
 /*   By: gmunoz <gmunoz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 16:29:46 by gmunoz            #+#    #+#             */
-/*   Updated: 2024/09/24 18:53:09 by gmunoz           ###   ########.fr       */
+/*   Updated: 2024/09/25 16:47:59 by gmunoz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,11 +46,18 @@ char	*map_loop(t_map *lay)
 		{
 			if (map)
 				free(map);
-			return (free(line), NULL);
+			return (NULL);
 		}
 		map = char_n_err(line, lay, map);
 		if (map == NULL)
-			return (free(line), NULL);
+		{
+			while (line != NULL)
+			{
+				free(line);
+				line = get_next_line(lay->map_fd);
+			}
+			return (NULL);
+		}
 		if (map_err(line, lay, 0) == 2)
 		{
 			free(line);

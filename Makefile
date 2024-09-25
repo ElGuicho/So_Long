@@ -6,7 +6,7 @@
 #    By: gmunoz <gmunoz@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/06/19 16:48:58 by gmunoz            #+#    #+#              #
-#    Updated: 2024/09/24 16:57:54 by gmunoz           ###   ########.fr        #
+#    Updated: 2024/09/25 16:46:40 by gmunoz           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -68,8 +68,8 @@ OBJS = $(SRC:.c=.o)
 all: $(NAME)
 
 $(NAME): $(OBJS)
-	$(MAKE) -C mlx_linux
-	$(MAKE) -C Libft
+	$(MAKE) -j -C mlx_linux
+	$(MAKE) -j -C Libft
 	$(CC) $(CFLAGS) $(OBJS) $(LIBFT) $(MLX_FLAGS) -o $(NAME)
 
 # Link object files into the executable
