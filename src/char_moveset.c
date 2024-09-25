@@ -6,7 +6,7 @@
 /*   By: gmunoz <gmunoz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 14:15:21 by gmunoz            #+#    #+#             */
-/*   Updated: 2024/09/24 18:08:20 by gmunoz           ###   ########.fr       */
+/*   Updated: 2024/09/25 18:35:52 by gmunoz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ void	move_up(t_vars *vars)
 	door_exit = vars->img->door_exit;
 	mlx_put_image_to_window(vars->mlx, vars->win, vars->img->floor, x, y);
 	vars->img->y -= 64;
+	y = vars->img->y;
 	check_position(vars);
 	if (vars->lay->map[y / 64 + 1][x / 64] == 'E' && vars->lay->collect != 0)
 		mlx_put_image_to_window(vars->mlx, vars->win, door_exit, x, y + 64);
@@ -57,6 +58,7 @@ void	move_left(t_vars *vars)
 	door_exit = vars->img->door_exit;
 	mlx_put_image_to_window(vars->mlx, vars->win, vars->img->floor, x, y);
 	vars->img->x -= 64;
+	x = vars->img->x;
 	check_position(vars);
 	if (vars->lay->map[y / 64][x / 64 + 1] == 'E' && vars->lay->collect != 0)
 		mlx_put_image_to_window(vars->mlx, vars->win, door_exit, x + 64, y);
@@ -75,6 +77,7 @@ void	move_down(t_vars *vars)
 	door_exit = vars->img->door_exit;
 	mlx_put_image_to_window(vars->mlx, vars->win, vars->img->floor, x, y);
 	vars->img->y += 64;
+	y = vars->img->y;
 	check_position(vars);
 	if (vars->lay->map[y / 64 - 1][x / 64] == 'E' && vars->lay->collect != 0)
 		mlx_put_image_to_window(vars->mlx, vars->win, door_exit, x, y - 64);
@@ -93,6 +96,7 @@ void	move_right(t_vars *vars)
 	door_exit = vars->img->door_exit;
 	mlx_put_image_to_window(vars->mlx, vars->win, vars->img->floor, x, y);
 	vars->img->x += 64;
+	x = vars->img->x;
 	check_position(vars);
 	if (vars->lay->map[y / 64][x / 64 - 1] == 'E' && vars->lay->collect != 0)
 		mlx_put_image_to_window(vars->mlx, vars->win, door_exit, x - 64, y);

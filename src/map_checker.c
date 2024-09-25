@@ -6,7 +6,7 @@
 /*   By: gmunoz <gmunoz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 16:29:46 by gmunoz            #+#    #+#             */
-/*   Updated: 2024/09/25 17:38:12 by gmunoz           ###   ########.fr       */
+/*   Updated: 2024/09/25 18:19:26 by gmunoz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ char	*map_loop(t_map *lay)
 		line = get_next_line(lay->map_fd);
 		if (!line)
 		{
+			ft_printf("Error\nMap is empty\n");
 			if (map)
 				free(map);
 			return (NULL);
@@ -66,7 +67,10 @@ char	**sort_map(char const *map_file, t_map *lay)
 
 	lay->map_fd = open(map_file, O_RDONLY);
 	if (lay->map_fd == -1)
+	{
+		ft_printf("Error\nMap file not found\n");
 		return (NULL);
+	}
 	map = map_loop(lay);
 	close(lay->map_fd);
 	if (map == NULL)
@@ -85,7 +89,8 @@ char	**map_check(int argc, char const **argv, t_map *lay)
 		ft_printf("Error\nProgram only needs 1 extra argument\n");
 		return (NULL);
 	}
-	if (ft_strnstr(argv[1], ".ber", gnl_strlen(argv[1])) == NULL)
+	if (ft_strnstr(argv[1], ".ber", gnl_strlen(argv[1])) == NULL
+		|| ft_strnstr(argv[1], ".ber", gnl_strlen(argv[1]))[4] != '\0')
 	{
 		ft_printf("Error\nWrong file extension: needs to be \".ber\"\n");
 		return (NULL);
